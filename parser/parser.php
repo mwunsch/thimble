@@ -12,7 +12,17 @@ class Parser {
 	
 	public $type = '';
 	
-	public $defaults = array();
+	public $defaults = array(
+		'Favicon' 			=> 'http://assets.tumblr.com/images/default_avatar_16.gif',
+		'PortraitURL-16' 	=> "http://assets.tumblr.com/images/default_avatar_16.gif",
+		'PortraitURL-24' 	=> "http://assets.tumblr.com/images/default_avatar_24.gif",
+		'PortraitURL-30' 	=> "http://assets.tumblr.com/images/default_avatar_30.gif",
+		'PortraitURL-40' 	=> "http://assets.tumblr.com/images/default_avatar_40.gif",
+		'PortraitURL-48' 	=> "http://assets.tumblr.com/images/default_avatar_48.gif",
+		'PortraitURL-64' 	=> "http://assets.tumblr.com/images/default_avatar_64.gif",
+		'PortraitURL-96' 	=> "http://assets.tumblr.com/images/default_avatar_96.gif",
+		'PortraitURL-128' 	=> "http://assets.tumblr.com/images/default_avatar_128.gif"
+	);
 	
 	public $template = array();	
 		
@@ -80,7 +90,11 @@ class Parser {
 		foreach ($block as $html) {
 			$text = $this->get_block('Text', $html);
 			foreach ($text as $text_block) {
-				$post = preg_replace('/{Body}/', $post['Body'], $text_block);				
+				$text_post = preg_replace('/{Body}/', $post['Body'], $text_block);
+				if ($post['Title']) {
+					$text_post = preg_replace('/{Title}/', $post['Title'], $text_post);
+				}
+				// print_r($text_post);
 			} 
 		}
 
