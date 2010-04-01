@@ -97,9 +97,15 @@ class Parser {
 					case 'Text':
 						$html = $this->render_text_post($post, $markup);
 						break;
+					case 'Photo':
+						$html = $this->render_photo_post($post, $markup);
+						break;	
 					case 'Quote':
 						$html = $this->render_quote_post($post, $markup);
 						break;
+					case 'Link':
+						$html = $this->render_link_post($post, $markup);
+						break;	
 				}
 				$html = preg_replace($pattern, $html, $block);
 			}			
@@ -118,6 +124,10 @@ class Parser {
 		);	
 	}
 	
+	public function strip_block($name, $html) {
+		return preg_replace($this->block_pattern($name), '', $html);
+	}
+	
 	public function render_variable($name, $post, $block) {
 		return preg_replace('/{'.$name.'}/', $post[$name], $block);
 	} 
@@ -134,7 +144,7 @@ class Parser {
 			$html = $this->render_variable('Title', $post, $html);
 			$html = $this->render_block('Title', $html);
 		} else {
-			$html = preg_replace($this->block_pattern('Title'), '', $html);
+			$html = $this->strip_block('Title',$html);
 		}
 		return $html;
 	}
@@ -147,7 +157,57 @@ class Parser {
 			$html = $this->render_variable('Source', $post, $html);
 			$html = $this->render_block('Source', $html);
 		} else {
-			$html = preg_replace($this->block_pattern('Source'), '', $html);
+			$html = $this->strip_block('Source',$html);
+		}
+		return $html;
+	}
+	
+	protected function render_photo_post($post, $block) {
+		$html = $block;
+		$photo_sizes = array(
+			'PhotoURL-500', 'PhotoURL-400', 'PhotoURL-250', 'PhotoURL-100', 'PhotoURL-75sq'
+		);
+		foreach($photo_sizes as $size) {
+			$html = $this->render_variable($size, $post, $html);
+		}
+		if ($post['Caption']) {
+			$html = $this->render_variable('Caption', $post, $html);
+			$html = preg_replace('/{PhotoAlt}/', strip_tags($post['Caption']), $html);
+			$html = $this->render_block('Caption', $html);
+		} else {
+			$html = $this->strip_block('Caption',$html);
+		}
+		if ($post['PhotoURL-HighRes']) {
+			$html = $this->render_variable('PhotoURL-HighRes', $post, $html);
+			$html = $this->render_block('HighRes', $html);
+		} else {
+			$html = $this->strip_block('HighRes',$html);
+		}
+		if ($post['LinkURL']) {
+			$html = $this->render_variable('LinkURL', $post, $html);
+			$html = preg_replace(
+				'/{LinkOpenTag}/', 
+				'<a href="'.$post['LinkURL'].'">', 
+				$html
+			);
+			$html = preg_replace('/{LinkCloseTag}/', '</a>', $html);
+		}
+		return $html;
+	}
+	
+	protected function render_link_post($post, $block) {
+		$html = '';
+		$html = $this->render_variable('URL', $post, $block);
+		if ($post['Name']) {
+			$html = $this->render_variable('Name', $post, $block);
+		} else {
+			$html = preg_replace('/{Name}/', $post['URL'], $html);
+		}
+		if ($post['Description']) {
+			$html = $this->render_variable('Description', $post, $html);
+			$html = $this->render_block('Description', $html);
+		} else {
+			$html = $this->strip_block('Description',$html);
 		}
 		return $html;
 	}

@@ -10,6 +10,22 @@ Posts:
     PostId: 236
     Quote: It does not matter how slow you go so long as you do not stop.
     Source: Wisdom of <a href="http://en.wikipedia.org/wiki/Confucius">Confucius</a>
+  - Type: Photo
+    Permalink: http://demo.tumblr.com/post/459265350/passing-through-times-square-by-mareen-fischinger
+    PostId: 459265350
+    PhotoURL-500: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_500.jpg"
+    PhotoURL-400: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_400.jpg"
+    PhotoURL-250: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_250.jpg"
+    PhotoURL-100: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_100.jpg"
+    PhotoURL-75sq: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_75sq.jpg"
+    Caption: <p>Passing through Times Square by <a href="http://www.mareenfischinger.com/">Mareen Fischinger</a></p>
+    LinkURL: http://demo.tumblr.com/photo/1280/459265350/1/tumblr_kzjlfiTnfe1qz4rgh
+  - Type: Link
+    Permalink: http://demo.tumblr.com/post/234/my-favorite-web-sites
+    PostId: 234
+    URL: http://
+    Name: My Favorite Website
+    Description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
   - Type: Text
     Permalink: http://demo.tumblr.com/post/232/an-example-post
     PostId: 232
