@@ -52,7 +52,7 @@ class Parser {
 		// print_r($this->template);
 	}
 	
-	public function get_posts($document) {		
+	public function get_posts($document) {
 		$html = preg_replace_callback(
 			$this->block_pattern('Posts'),
 			array($this, 'render_posts'),
@@ -66,7 +66,7 @@ class Parser {
 		$html = '';
 		$posts = $this->template['Posts'];
 		foreach ($posts as $index => $post) {
-			//render non-post blocks
+			//render post blocks non-specific to type: permalink, etc.
 			$html .= $this->render_post($post, $this->select_by_type($post, $block));
 		}
 		return $html;
