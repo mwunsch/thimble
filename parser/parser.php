@@ -42,18 +42,52 @@ class Parser {
 		// generate metatags.
 		
 		if ($this->type == 'index') {
-			$doc = $this->render_block('IndexPage', $doc);
-			$doc = $this->get_posts($doc);
-		}		
-		// Generate global values
+			$doc = $this->build_index($doc);
+		}
+				
 		if ($this->template['Description']) {
 			$doc = $this->render_block('Description', $doc);
+		}		
+		if ($this->template['AskLabel']) {
+			$doc = preg_replace('/{AskLabel}/', $this->template['AskLabel'], $doc);
+			$doc = $this->render_block('AskEnabled',$doc);
 		}
+		if ($this->template['SubmissionsEnabled']) {
+			$doc = $this->render_block('SubmissionsEnabled',$doc);
+		}		
+		if ($this->template['Pages']) {
+			$doc = $this->get_pages($this->template['Pages'],$doc);
+		}
+		
 		$doc = $this->seek($doc);
 		// Cleanup additional blocks
 		// $doc = $this->cleanup($doc);
 		
 		return $doc;
+	}
+	
+	public function build_index($doc) {
+		$doc = $this->render_block('IndexPage', $doc);
+		$doc = $this->get_posts($doc);
+		return $doc;
+	}
+	
+	public function get_pages($pages, $document) {
+		$html = $document;
+		$has_page_block = preg_match_all($this->block_pattern('Pages'), $html, $matcher);
+		$page_group = '';
+		if ($has_page_block) {
+			foreach ($pages as $page) {
+				foreach ($matcher[2] as $page_block) {
+					$page_block = preg_replace('/{Label}/', $page['Label'], $page_block);
+					$page_block = preg_replace('/{URL}/', $page['URL'], $page_block);					
+					$page_group .= $page_block;
+				}
+			}
+		}
+		$html = preg_replace($this->block_pattern('Pages'), $page_group, $html);
+		$html = $this->render_block('HasPages', $html);
+		return $html;
 	}
 	
 	public function get_posts($document) {
@@ -70,6 +104,12 @@ class Parser {
 		$html = '';
 		$posts = $this->template['Posts'];
 		foreach ($posts as $index => $post) {
+			if (($index+1) % 2) {
+				$block = $this->render_block('Odd', $block);
+			} else {
+				$block = $this->render_block('Even', $block);
+			}
+			$block = $this->render_block('Post'.($index + 1),$block);
 			$markup = $this->prepare_post($post, $block);
 			//render post blocks non-specific to type: permalink, etc.
 			$html .= $this->render_post($post, $this->select_by_type($post, $markup));
@@ -356,7 +396,7 @@ class Parser {
 			foreach ($matcher[2] as $each_line) {
 				foreach ($post['Lines'] as $index => $lines) {
 					foreach ($lines as $label => $line) {
-						if ($index % 2) {
+						if (($index+1) % 2) {
 							$alt = 'odd';
 						} else {
 							$alt = 'even';

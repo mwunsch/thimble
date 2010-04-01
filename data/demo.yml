@@ -3,7 +3,11 @@ Title: Demo
 Description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
 MetaDescription: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
 RSS: http://demo.tumblr.com/rss
-AskLabel: "Ask me anything"
+# AskLabel: "Ask me anything"
+# SubmissionsEnabled: true
+Pages:
+  - Label: About Me
+    URL: http://demo.tumblr.com/about_me
 Posts: 
   - Type: Quote
     Permalink: http://demo.tumblr.com/post/236/it-does-not-matter-how-slow-you-go-so-long-as-you
