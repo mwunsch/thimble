@@ -5,9 +5,26 @@ MetaDescription: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed 
 RSS: http://demo.tumblr.com/rss
 # AskLabel: "Ask me anything"
 # SubmissionsEnabled: true
+# TwitterUsername: markwunsch
 Pages:
   - Label: About Me
-    URL: http://demo.tumblr.com/about_me
+    URL: about_me/
+Following:
+  - Name: staff
+    Title: Tumblr Staff
+    URL: http://staff.tumblr.com/
+  - Name: jacob
+    Title: Jacob Bijani
+    URL: http://jacobbijani.com
+  - Name: petervidani
+    Title: Peter Vidani
+    URL: http://blog.petervidani.com/
+  - Name: cubicle17
+    Title: cubicle17 | a tumblelog by Bill Israel
+    URL: http://cubicle17.com
+  - Name: inky
+    Title: inky
+    URL: http://found.boxofjunk.ws/
 Posts: 
   - Type: Quote
     Permalink: http://demo.tumblr.com/post/236/it-does-not-matter-how-slow-you-go-so-long-as-you

@@ -47,21 +47,33 @@ class Parser {
 				
 		if ($this->template['Description']) {
 			$doc = $this->render_block('Description', $doc);
-		}		
+		}	
 		if ($this->template['AskLabel']) {
 			$doc = preg_replace('/{AskLabel}/', $this->template['AskLabel'], $doc);
 			$doc = $this->render_block('AskEnabled',$doc);
+		} else {
+			$doc = $this->strip_block('AskEnabled',$doc);
 		}
 		if ($this->template['SubmissionsEnabled']) {
 			$doc = $this->render_block('SubmissionsEnabled',$doc);
-		}		
+		} else {
+			$doc = $this->strip_block('SubmissionsEnabled',$doc);
+		}	
 		if ($this->template['Pages']) {
 			$doc = $this->get_pages($this->template['Pages'],$doc);
+		} else {
+			$doc = $this->strip_block('HasPages',$doc);
+		}
+		if ($this->template['TwitterUsername']) {
+			$doc = $this->render_block('Twitter',$doc);
+			$doc = preg_replace('/{TwitterUsername}/', $this->template['TwitterUsername'], $doc);			
+		} else {
+			$doc = $this->strip_block('Twitter',$doc);
 		}
 		
 		$doc = $this->seek($doc);
 		// Cleanup additional blocks
-		// $doc = $this->cleanup($doc);
+		$doc = $this->cleanup($doc);
 		
 		return $doc;
 	}
