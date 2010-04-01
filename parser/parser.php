@@ -43,12 +43,15 @@ class Parser {
 		
 		$doc = $this->get_posts($document);
 		
+		// Generate global values
 		if ($this->template['Description']) {
 			$doc = $this->render_block('Description', $doc);
 		}
+		$doc = $this->seek($doc);
+		// Cleanup additional blocks
+		$doc = $this->cleanup($doc);
 		
-		// Finally, generate global values		
-		return $this->seek($doc);
+		return $doc;
 		// print_r($this->template);
 	}
 	
@@ -137,6 +140,10 @@ class Parser {
 	
 	public function seek($context) {
 		return preg_replace_callback($this->variables, array($this, 'convert_properties'), $context);
+	}
+	
+	public function cleanup($document) {
+		return preg_replace($this->blocks, '', $document);
 	}
 	
 	protected function render_text_post($post, $block) {
@@ -244,7 +251,6 @@ class Parser {
 		}
 		return $html;
 	}
-	
 	
 	protected function convert_properties($match) {
 		if (array_key_exists($match[1], $this->template)) {
