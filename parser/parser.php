@@ -47,7 +47,12 @@ class Parser {
 				
 		if ($this->template['Description']) {
 			$doc = $this->render_block('Description', $doc);
-		}	
+		}
+		if ($this->template['Following']) {
+			$doc = $this->render_following($this->template['Following'], $doc);
+		} else {
+			$doc = $this->strip_block('Following',$doc);
+		}
 		if ($this->template['AskLabel']) {
 			$doc = preg_replace('/{AskLabel}/', $this->template['AskLabel'], $doc);
 			$doc = $this->render_block('AskEnabled',$doc);
@@ -73,7 +78,7 @@ class Parser {
 		
 		$doc = $this->seek($doc);
 		// Cleanup additional blocks
-		$doc = $this->cleanup($doc);
+		// $doc = $this->cleanup($doc);
 		
 		return $doc;
 	}
@@ -99,6 +104,34 @@ class Parser {
 		}
 		$html = preg_replace($this->block_pattern('Pages'), $page_group, $html);
 		$html = $this->render_block('HasPages', $html);
+		return $html;
+	}
+	
+	public function render_following($following, $document) {
+		$html = $document;
+		$has_following_block = preg_match_all($this->block_pattern('Followed'), $html, $matcher);
+		$following_group = '';
+		if ($has_following_block) {
+			foreach ($following as $user) {
+				foreach ($matcher[2] as $follows) {
+					$follows = preg_replace('/{FollowedName}/', $user['Name'], $follows);
+					$follows = preg_replace('/{FollowedTitle}/', $user['Title'], $follows);
+					$follows = preg_replace('/{FollowedURL}/', $user['URL'], $follows);
+					$portraits = array(
+						'PortraitURL-16', 'PortraitURL-24', 'PortraitURL-30', 
+						'PortraitURL-40', 'PortraitURL-48', 'PortraitURL-64',
+						'PortraitURL-96', 'PortraitURL-128'
+					);
+					foreach ($portraits as $portrait) {
+						$follows = preg_replace('/{Followed'.$portrait.'}/', $user[$portrait], $follows);
+					}
+					$following_group .= $follows;
+				}
+			}
+		}
+		
+		$html = preg_replace($this->block_pattern('Followed'), $following_group, $html);
+		$html = $this->render_block('Following', $html);
 		return $html;
 	}
 	
@@ -523,6 +556,5 @@ PLAYER;
 	}
 	
 }
-
 
 ?>

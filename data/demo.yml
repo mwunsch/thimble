@@ -13,18 +13,58 @@ Following:
   - Name: staff
     Title: Tumblr Staff
     URL: http://staff.tumblr.com/
+    PortraitURL-16: "http://30.media.tumblr.com/avatar_013241641371_16.png"
+    PortraitURL-24: "http://30.media.tumblr.com/avatar_013241641371_24.png"
+    PortraitURL-30: "http://30.media.tumblr.com/avatar_013241641371_30.png"
+    PortraitURL-40: "http://30.media.tumblr.com/avatar_013241641371_40.png"
+    PortraitURL-48: "http://30.media.tumblr.com/avatar_013241641371_48.png"
+    PortraitURL-64: "http://30.media.tumblr.com/avatar_013241641371_64.png"
+    PortraitURL-96:  "http://30.media.tumblr.com/avatar_013241641371_96.png"
+    PortraitURL-128: "http://30.media.tumblr.com/avatar_013241641371_128.png"              
   - Name: jacob
     Title: Jacob Bijani
     URL: http://jacobbijani.com
+    PortraitURL-16: "http://30.media.tumblr.com/avatar_5b13c55f0688_16.png"
+    PortraitURL-24: "http://30.media.tumblr.com/avatar_5b13c55f0688_24.png"
+    PortraitURL-30: "http://30.media.tumblr.com/avatar_5b13c55f0688_30.png"
+    PortraitURL-40: "http://30.media.tumblr.com/avatar_5b13c55f0688_40.png"
+    PortraitURL-48: "http://30.media.tumblr.com/avatar_5b13c55f0688_48.png"
+    PortraitURL-64: "http://30.media.tumblr.com/avatar_5b13c55f0688_64.png"
+    PortraitURL-96: "http://30.media.tumblr.com/avatar_5b13c55f0688_96.png"
+    PortraitURL-128: "http://30.media.tumblr.com/avatar_5b13c55f0688_128.png"
   - Name: petervidani
     Title: Peter Vidani
     URL: http://blog.petervidani.com/
+    PortraitURL-16: "http://25.media.tumblr.com/avatar_51777f3c873f_16.png"
+    PortraitURL-24: "http://25.media.tumblr.com/avatar_51777f3c873f_24.png"
+    PortraitURL-30: "http://25.media.tumblr.com/avatar_51777f3c873f_30.png"
+    PortraitURL-40: "http://25.media.tumblr.com/avatar_51777f3c873f_40.png"
+    PortraitURL-48: "http://25.media.tumblr.com/avatar_51777f3c873f_48.png"
+    PortraitURL-64: "http://25.media.tumblr.com/avatar_51777f3c873f_64.png"
+    PortraitURL-96: "http://25.media.tumblr.com/avatar_51777f3c873f_96.png"
+    PortraitURL-128: "http://25.media.tumblr.com/avatar_51777f3c873f_128.png"
   - Name: cubicle17
     Title: cubicle17 | a tumblelog by Bill Israel
     URL: http://cubicle17.com
+    PortraitURL-16: "http://28.media.tumblr.com/avatar_7222a6c76360_16.png"
+    PortraitURL-24: "http://28.media.tumblr.com/avatar_7222a6c76360_24.png" 
+    PortraitURL-30: "http://28.media.tumblr.com/avatar_7222a6c76360_30.png"
+    PortraitURL-40: "http://28.media.tumblr.com/avatar_7222a6c76360_40.png"
+    PortraitURL-48: "http://28.media.tumblr.com/avatar_7222a6c76360_48.png"
+    PortraitURL-64: "http://28.media.tumblr.com/avatar_7222a6c76360_64.png"
+    PortraitURL-96: "http://28.media.tumblr.com/avatar_7222a6c76360_96.png"
+    PortraitURL-128: "http://28.media.tumblr.com/avatar_7222a6c76360_128.png"
   - Name: inky
     Title: inky
     URL: http://found.boxofjunk.ws/
+    PortraitURL-16: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_16.png"
+    PortraitURL-24: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_24.png"
+    PortraitURL-30: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_30.png"
+    PortraitURL-40: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_40.png"
+    PortraitURL-48: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_48.png"
+    PortraitURL-64: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_64.png"
+    PortraitURL-96: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_96.png"
+    PortraitURL-128: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_128.png"
 Posts: 
   - Type: Quote
     Permalink: http://demo.tumblr.com/post/236/it-does-not-matter-how-slow-you-go-so-long-as-you
