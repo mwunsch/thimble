@@ -5,6 +5,11 @@ MetaDescription: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed 
 RSS: http://demo.tumblr.com/rss
 AskLabel: "Ask me anything"
 Posts: 
+  - Type: Quote
+    Permalink: http://demo.tumblr.com/post/236/it-does-not-matter-how-slow-you-go-so-long-as-you
+    PostId: 236
+    Quote: It does not matter how slow you go so long as you do not stop.
+    Source: Wisdom of <a href="http://en.wikipedia.org/wiki/Confucius">Confucius</a>
   - Type: Text
     Permalink: http://demo.tumblr.com/post/232/an-example-post
     PostId: 232

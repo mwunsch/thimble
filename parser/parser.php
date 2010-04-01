@@ -49,6 +49,7 @@ class Parser {
 		
 		// Finally, generate global values		
 		return $this->seek($doc);
+		// print_r($this->template);
 	}
 	
 	public function get_posts($document) {		
@@ -66,12 +67,12 @@ class Parser {
 		$posts = $this->template['Posts'];
 		foreach ($posts as $index => $post) {
 			//render non-post blocks
-			$html .= $this->render_post($post, $this->filter_by_post_type($post, $block));
-		}		
+			$html .= $this->render_post($post, $this->select_by_type($post, $block));
+		}
 		return $html;
 	}
 	
-	public function filter_by_post_type($post, $block) {
+	public function select_by_type($post, $block) {
 		$post_type = $this->block_pattern($post['Type']);
 		$found = preg_match_all($post_type, $block, $posts);
 		if ($found) {
@@ -84,34 +85,24 @@ class Parser {
 			return $html;
 		}
 	}
-		
-	public function render_post($post, $block) {
-		$html = '';
-		switch($post['Type']) {
-			case 'Text':
-				$html = $this->render_text_post($post, $block);
-				break;
-		}
-		return $html;
-	}
 	
-	protected function render_text_post($post, $block) {
-		$pattern = $this->block_pattern($post['Type']);
-
+	public function render_post($post, $block) {
+		$post_type = $post['Type'];
+		$pattern = $this->block_pattern($post_type);
 		$does_match = preg_match_all($pattern, $block, $posts);
+		$html = '';
 		if ($does_match) {
-			
-			$html = '';
-			foreach ($posts[2] as $index => $text) {
-				$html = preg_replace('/{Body}/', $post['Body'], $text);
-				if ($post['Title']) {
-					$html = preg_replace('/{Title}/', $post['Title'], $html);
-					$html = $this->render_block('Title', $html);
-				} else {
-					$html = preg_replace($this->block_pattern('Title'), '', $html);
+			foreach($posts[2] as $index => $markup) {
+				switch($post_type) {
+					case 'Text':
+						$html = $this->render_text_post($post, $markup);
+						break;
+					// case 'Quote':
+					// 	print_r('QUOTE');
+					// 	break;
 				}
-				$html = preg_replace($pattern, $html, $block, 1);	
-			}
+				$html = preg_replace($pattern, $html, $block);
+			}			
 			return $html;
 		}
 	}
@@ -131,27 +122,23 @@ class Parser {
 		return preg_replace_callback($this->variables, array($this, 'convert_properties'), $context);
 	}
 	
+	protected function render_text_post($post, $block) {
+		$html = '';
+		$html = preg_replace('/{Body}/', $post['Body'], $block);
+		if ($post['Title']) {
+			$html = preg_replace('/{Title}/', $post['Title'], $html);
+			$html = $this->render_block('Title', $html);
+		} else {
+			$html = preg_replace($this->block_pattern('Title'), '', $html);
+		}
+		return ($html);
+	}
+	
 	protected function convert_properties($match) {
 		if (array_key_exists($match[1], $this->template)) {
 			return $this->template[$match[1]];
 		}
 	}
-	
-	// public function narrow_scope($scope, $block='') {
-	// 	$does_match = preg_match_all($this->blocks, $scope, $matcher);
-	// 	$doc = '';
-	// 			
-	// 	if ($does_match){
-	// 		foreach ($matcher[2] as $context) {
-	// 			$doc .= $this->narrow_scope($context);
-	// 		}
-	// 		return $doc;
-	// 	} else {
-	// 		return $scope;
-	// 		// return preg_replace($this->variables, $scope ,$scope);
-	// 	}
-	// }
-	//
 	
 }
 
