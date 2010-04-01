@@ -2,7 +2,6 @@
 Title: Demo
 Description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
 MetaDescription: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
-RSS: http://demo.tumblr.com/rss
 # AskLabel: "Ask me anything"
 # SubmissionsEnabled: true
 # TwitterUsername: markwunsch
@@ -65,6 +64,17 @@ Following:
     PortraitURL-64: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_64.png"
     PortraitURL-96: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_96.png"
     PortraitURL-128: "http://27.media.tumblr.com/avatar_d3b0adb5c0fb_128.png"
+  - Name: matthewb
+    Title: Matthew Buchanan
+    URL: http://matthewbuchanan.name/
+    PortraitURL-16: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_16.png"
+    PortraitURL-24: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_24.png"
+    PortraitURL-30: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_30.png"
+    PortraitURL-40: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_40.png"
+    PortraitURL-48: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_38.png"
+    PortraitURL-64: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_64.png"
+    PortraitURL-96: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_96.png"
+    PortraitURL-128: "http://26.media.tumblr.com/avatar_3ae8a6cc1f8e_128.png"
 Posts: 
   - Type: Quote
     Permalink: http://demo.tumblr.com/post/236/it-does-not-matter-how-slow-you-go-so-long-as-you
