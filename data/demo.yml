@@ -26,6 +26,16 @@ Posts:
     URL: http://
     Name: My Favorite Website
     Description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
+  - Type: Chat
+    Permalink: http://demo.tumblr.com/post/233/jack-hey-you-know-what-sucks-lindsey
+    PostId: 233
+    Lines:
+      - Jack: "Hey, you know what sucks?"
+      - Lindsey: "vaccuums"
+      - Jack: "Hey, you know what sucks in a metaphorical sense?"
+      - Lindsey: "black holes"
+      - Jack: "Hey, you know what just isn't cool?"
+      - Lindsey: "lava?"
   - Type: Text
     Permalink: http://demo.tumblr.com/post/232/an-example-post
     PostId: 232

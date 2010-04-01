@@ -105,7 +105,10 @@ class Parser {
 						break;
 					case 'Link':
 						$html = $this->render_link_post($post, $markup);
-						break;	
+						break;
+					case 'Chat':
+						$html = $this->render_chat_post($post, $markup);
+						break;		
 				}
 				$html = preg_replace($pattern, $html, $block);
 			}			
@@ -131,7 +134,6 @@ class Parser {
 	public function render_variable($name, $post, $block) {
 		return preg_replace('/{'.$name.'}/', $post[$name], $block);
 	} 
-	
 	
 	public function seek($context) {
 		return preg_replace_callback($this->variables, array($this, 'convert_properties'), $context);
@@ -208,6 +210,37 @@ class Parser {
 			$html = $this->render_block('Description', $html);
 		} else {
 			$html = $this->strip_block('Description',$html);
+		}
+		return $html;
+	}
+	
+	protected function render_chat_post($post, $block) {
+		$html = '';
+		$has_lines = preg_match_all($this->block_pattern('Lines'), $block, $matcher);
+		$line_markup = '';
+		if ($has_lines) {
+			foreach ($matcher[2] as $each_line) {
+				foreach ($post['Lines'] as $index => $lines) {
+					foreach ($lines as $label => $line) {
+						if ($index % 2) {
+							$alt = 'odd';
+						} else {
+							$alt = 'even';
+						}
+						$line_markup .= preg_replace('/{Line}/', $line, $each_line);
+						$line_markup = preg_replace('/{Alt}/', $alt, $line_markup);
+						$line_markup = preg_replace('/{Label}/', $label, $line_markup);
+						$line_markup = $this->render_block('Label', $line_markup);
+					}
+				}
+			}
+		}
+		$html = preg_replace($this->block_pattern('Lines'), $line_markup, $block);
+		if ($post['Title']) {
+			$html = $this->render_variable('Title', $post, $html);
+			$html = $this->render_block('Title', $html);
+		} else {
+			$html = $this->strip_block('Title',$html);			
 		}
 		return $html;
 	}
