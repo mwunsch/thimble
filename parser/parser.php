@@ -97,9 +97,9 @@ class Parser {
 					case 'Text':
 						$html = $this->render_text_post($post, $markup);
 						break;
-					// case 'Quote':
-					// 	print_r('QUOTE');
-					// 	break;
+					case 'Quote':
+						$html = $this->render_quote_post($post, $markup);
+						break;
 				}
 				$html = preg_replace($pattern, $html, $block);
 			}			
@@ -118,21 +118,40 @@ class Parser {
 		);	
 	}
 	
+	public function render_variable($name, $post, $block) {
+		return preg_replace('/{'.$name.'}/', $post[$name], $block);
+	} 
+	
+	
 	public function seek($context) {
 		return preg_replace_callback($this->variables, array($this, 'convert_properties'), $context);
 	}
 	
 	protected function render_text_post($post, $block) {
 		$html = '';
-		$html = preg_replace('/{Body}/', $post['Body'], $block);
+		$html = $this->render_variable('Body', $post, $block);
 		if ($post['Title']) {
-			$html = preg_replace('/{Title}/', $post['Title'], $html);
+			$html = $this->render_variable('Title', $post, $html);
 			$html = $this->render_block('Title', $html);
 		} else {
 			$html = preg_replace($this->block_pattern('Title'), '', $html);
 		}
-		return ($html);
+		return $html;
 	}
+	
+	protected function render_quote_post($post, $block) {
+		$html = '';
+		$html = $this->render_variable('Quote', $post, $block);
+		$html = $this->render_variable('Length', $post, $html);
+		if ($post['Source']) {
+			$html = $this->render_variable('Source', $post, $html);
+			$html = $this->render_block('Source', $html);
+		} else {
+			$html = preg_replace($this->block_pattern('Source'), '', $html);
+		}
+		return $html;
+	}
+	
 	
 	protected function convert_properties($match) {
 		if (array_key_exists($match[1], $this->template)) {
