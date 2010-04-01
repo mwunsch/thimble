@@ -132,9 +132,10 @@ class Parser {
 		$block = $this->render_variable('Permalink', $post, $block);
 		$block = $this->render_variable('PostId', $post, $block);
 		$block = $this->render_post_date($post, $block);
-		if ($post['Reblog']) {
-			$block = $this->render_reblog_info($post, $block);
-		}		
+		if ($post['Tags']) {
+			$block = $this->render_tags_for_post($post, $block);
+		}
+		
 		if ($post['NoteCount']) {
 			$block = $this->render_variable('NoteCount', $post, $block);
 			$block = $this->render_block('NoteCount', $block);
@@ -142,6 +143,11 @@ class Parser {
 		} else {
 			$block = $this->strip_block('NoteCount',$block);
 		}
+		
+		if ($post['Reblog']) {
+			$block = $this->render_reblog_info($post, $block);
+		}
+		
 		$block = $this->render_block('More', $block);
 		return $block;
 	}
@@ -206,6 +212,27 @@ class Parser {
 		$html = preg_replace('/{Seconds}/', strftime('%S',$time), $html);
 
 		$html = $this->render_block('Date', $html);
+		return $html;
+	}
+	
+	protected function render_tags_for_post($post, $block) {
+		$html = $block;
+		$tags = $post['Tags'];
+		$has_tag_block = preg_match_all($this->block_pattern('Tags'), $html, $matcher);
+		$tag_group = '';		
+		if ($has_tag_block) {
+			foreach ($tags as $tag) {
+				$safe_tag = preg_replace('/\s/','_',strtolower($tag));
+				foreach ($matcher[2] as $tag_block) {
+					$tag_block = preg_replace('/{Tag}/', $tag, $tag_block);
+					$tag_block = preg_replace('/{URLSafeTag}/', $safe_tag, $tag_block);
+					$tag_block = preg_replace('/{TagURL}|{TagURLChrono}/', "tagged/".$safe_tag, $tag_block);					
+					$tag_group .= $tag_block;
+				}
+			}
+		}
+		$html = $this->render_block('HasTags', $html);
+		$html = preg_replace($this->block_pattern('Tags'), $tag_group, $html);
 		return $html;
 	}
 	

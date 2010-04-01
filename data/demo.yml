@@ -10,20 +10,18 @@ Posts:
     PostId: 236
     NoteCount: 3688
     Timestamp: 1163014020
+    Tags:
+      - wisdom
     Quote: It does not matter how slow you go so long as you do not stop.
     Source: Wisdom of <a href="http://en.wikipedia.org/wiki/Confucius">Confucius</a>
-    Reblog:
-      ReblogParentName: demo
-      ReblogParentTitle: Demo
-      ReblogParentURL: http://demo.tumblr.com/
-      Root:
-        ReblogRootName: staff
-        ReblogRootTitle: Tumblr Staff
-        ReblogRootURL: http://staff.tumblr.com/
   - Type: Photo
     Permalink: http://demo.tumblr.com/post/459265350/passing-through-times-square-by-mareen-fischinger
     PostId: 459265350
     NoteCount: 49
+    Tags:
+      - Mareen Fischinger
+      - New York City
+      - Times Square
     Timestamp: 1163013960
     PhotoURL-500: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_500.jpg"
     PhotoURL-400: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_400.jpg"
@@ -57,6 +55,14 @@ Posts:
     Permalink: http://demo.tumblr.com/post/459260683/allison-weiss-fingers-crossed
     PostId: 459260683
     NoteCount: 85
+    Reblog:
+      ReblogParentName: allisonweiss
+      ReblogParentTitle: A DAY IN THE LIFE OF ALLISON WEISS
+      ReblogParentURL: http://allisonweiss.tumblr.com/
+    # Root:
+    #   ReblogRootName: staff
+    #   ReblogRootTitle: Tumblr Staff
+    #   ReblogRootURL: http://staff.tumblr.com/
     Caption: '<p><strong><a href="#" title="http://allisonweiss.tumblr.com/">Allison Weiss</a> —</strong> Fingers Crossed</p>'
     PlayCount: 18307
     AlbumArtURL: http://16.media.tumblr.com/tumblr_ksc4i2SkVU1qz8ouqo1_r2_cover.jpg
