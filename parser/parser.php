@@ -49,10 +49,9 @@ class Parser {
 		}
 		$doc = $this->seek($doc);
 		// Cleanup additional blocks
-		$doc = $this->cleanup($doc);
+		// $doc = $this->cleanup($doc);
 		
 		return $doc;
-		// print_r($this->template);
 	}
 	
 	public function get_posts($document) {
@@ -111,7 +110,10 @@ class Parser {
 						break;
 					case 'Chat':
 						$html = $this->render_chat_post($post, $markup);
-						break;		
+						break;
+					case 'Audio':
+						$html = $this->render_audio_post($post, $markup);
+						break;
 				}
 				$html = preg_replace($pattern, $html, $block);
 			}			
@@ -250,6 +252,77 @@ class Parser {
 			$html = $this->strip_block('Title',$html);			
 		}
 		return $html;
+	}
+	
+	protected function render_audio_post($post, $block) {
+		$html = $block;
+		$audio_file = $post['AudioFile'];
+		if ($post['ExternalAudioURL']) {
+			$audio_file = $post['ExternalAudioURL'];
+			$html = $this->render_variable('ExternalAudioURL', $post, $html);
+			$html = $this->render_block('ExternalAudio', $html);
+		} else {
+			$html = $this->strip_block('ExternalAudio', $html);
+		}
+		$html = preg_replace('/{AudioPlayer}/', $this->create_audio_player($audio_file,'black'), $html);
+		$html = preg_replace('/{AudioPlayerBlack}/', $this->create_audio_player($audio_file,'black'), $html);
+		$html = preg_replace('/{AudioPlayerWhite}/', $this->create_audio_player($audio_file), $html);
+		$html = preg_replace('/{AudioPlayerGrey}/', $this->create_audio_player($audio_file, 'grey'), $html);
+		
+		$html = $this->render_variable('PlayCount', $post, $html);
+		$html = preg_replace('/{FormatPlayCount}/', number_format($post['PlayCount']), $html);
+		$html = preg_replace('/{PlayCountWithLabel}/', number_format($post['PlayCount'])." plays", $html);
+		
+		if ($post['Caption']) {
+			$html = $this->render_variable('Caption', $post, $html);
+			$html = $this->render_block('Caption', $html);
+		} else {
+			$html = $this->strip_block('Caption', $html);
+		}
+		if ($post['AlbumArtURL']) {
+			$html = $this->render_variable('AlbumArtURL', $post, $html);
+			$html = $this->render_block('AlbumArt', $html);
+		} else {
+			$html = $this->strip_block('AlbumArt', $html);
+		}
+		if ($post['Artist']) {
+			$html = $this->render_variable('Artist', $post, $html);
+			$html = $this->render_block('Artist', $html);
+		} else {
+			$html = $this->strip_block('Artist', $html);
+		}
+		if ($post['Album']) {
+			$html = $this->render_variable('Album', $post, $html);
+			$html = $this->render_block('Album', $html);
+		} else {
+			$html = $this->strip_block('Album', $html);
+		}
+		if ($post['TrackName']) {
+			$html = $this->render_variable('TrackName', $post, $html);
+			$html = $this->render_block('TrackName', $html);
+		} else {
+			$html = $this->strip_block('TrackName', $html);
+		}
+		
+		return $html;		
+	}
+	
+	protected function create_audio_player($audio_file, $color = '') {
+		if ($color && ($color != 'white')) {
+			if ($color == 'grey') {
+				$color = '';
+				$audio_file .= "&color=E4E4E4";
+			} else {
+				$color = '_'.$color;
+			}
+		} else {
+			$color = '';
+			$audio_file .= "&color=FFFFFF";
+		}
+		return <<<PLAYER
+<script type="text/javascript" language="javascript" src="http://assets.tumblr.com/javascript/tumblelog.js?16"></script><span id="audio_player_459260683">[<a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" target="_blank">Flash 9</a> is required to listen to audio.]</span><script type="text/javascript">replaceIfFlash(9,"audio_player_459260683",'<div class="audio_player"><embed type="application/x-shockwave-flash" src="http://demo.tumblr.com/swf/audio_player$color.swf?audio_file=$audio_file" height="27" width="207" quality="best"></embed></div>')</script>
+PLAYER;
+	
 	}
 	
 	protected function convert_properties($match) {
