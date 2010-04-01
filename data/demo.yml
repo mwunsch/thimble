@@ -8,11 +8,23 @@ Posts:
   - Type: Quote
     Permalink: http://demo.tumblr.com/post/236/it-does-not-matter-how-slow-you-go-so-long-as-you
     PostId: 236
+    NoteCount: 3688
+    Timestamp: 1163014020
     Quote: It does not matter how slow you go so long as you do not stop.
     Source: Wisdom of <a href="http://en.wikipedia.org/wiki/Confucius">Confucius</a>
+    Reblog:
+      ReblogParentName: demo
+      ReblogParentTitle: Demo
+      ReblogParentURL: http://demo.tumblr.com/
+      Root:
+        ReblogRootName: staff
+        ReblogRootTitle: Tumblr Staff
+        ReblogRootURL: http://staff.tumblr.com/
   - Type: Photo
     Permalink: http://demo.tumblr.com/post/459265350/passing-through-times-square-by-mareen-fischinger
     PostId: 459265350
+    NoteCount: 49
+    Timestamp: 1163013960
     PhotoURL-500: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_500.jpg"
     PhotoURL-400: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_400.jpg"
     PhotoURL-250: "http://29.media.tumblr.com/tumblr_kzjlfiTnfe1qz4rgho1_250.jpg"
@@ -23,12 +35,16 @@ Posts:
   - Type: Link
     Permalink: http://demo.tumblr.com/post/234/my-favorite-web-sites
     PostId: 234
+    NoteCount: 511
+    Timestamp: 1163013900
     URL: http://
     Name: My Favorite Website
     Description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
   - Type: Chat
     Permalink: http://demo.tumblr.com/post/233/jack-hey-you-know-what-sucks-lindsey
     PostId: 233
+    NoteCount: 1055
+    Timestamp: 1163013840
     Lines:
       - Jack: "Hey, you know what sucks?"
       - Lindsey: "vaccuums"
@@ -37,8 +53,10 @@ Posts:
       - Jack: "Hey, you know what just isn't cool?"
       - Lindsey: "lava?"
   - Type: Audio
+    Timestamp: 1162927380
     Permalink: http://demo.tumblr.com/post/459260683/allison-weiss-fingers-crossed
     PostId: 459260683
+    NoteCount: 85
     Caption: '<p><strong><a href="#" title="http://allisonweiss.tumblr.com/">Allison Weiss</a> —</strong> Fingers Crossed</p>'
     PlayCount: 18307
     AlbumArtURL: http://16.media.tumblr.com/tumblr_ksc4i2SkVU1qz8ouqo1_r2_cover.jpg
@@ -48,6 +66,8 @@ Posts:
   - Type: Text
     Permalink: http://demo.tumblr.com/post/232/an-example-post
     PostId: 232
+    Timestamp: 1162927320
+    NoteCount: 674
     Title: An example post
     Body: >
       <p>Lorem ipsum dolor sit amet, consectetuer <a href="http:///">adipiscing elit</a>. Aliquam nisi lorem, pulvinar id, commodo feugiat, vehicula et, mauris. Aliquam mattis porta urna. Maecenas dui neque, rhoncus sed, vehicula vitae, auctor at, nisi. Aenean id massa ut lacus molestie porta. Curabitur sit amet quam id libero suscipit venenatis.</p>
@@ -62,5 +82,6 @@ Posts:
   - Type: Text
     Permalink: http://demo.tumblr.com/post/459009076/lorem-ipsum-dolor-sit-amet-consectetuer
     PostId: 459009076
+    Timestamp: 1162927260
     Body: >
       <p>Lorem ipsum dolor sit amet, consectetuer <a href="http:///">adipiscing elit</a>. Aliquam nisi lorem, pulvinar id, commodo feugiat, vehicula et, mauris. Aliquam mattis porta urna. Maecenas dui neque, rhoncus sed, vehicula vitae, auctor at, nisi. Aenean id massa ut lacus molestie porta. Curabitur sit amet quam id libero suscipit venenatis.</p>

@@ -37,12 +37,14 @@ class Parser {
 	}
 	
 	public function parse($document) {
-		// Do big GREP on $document based on page type
-		// return $this->narrow_scope($document);
+		$doc = $document;
+		
 		// generate metatags.
 		
-		$doc = $this->get_posts($document);
-		
+		if ($this->type == 'index') {
+			$doc = $this->render_block('IndexPage', $doc);
+			$doc = $this->get_posts($doc);
+		}		
 		// Generate global values
 		if ($this->template['Description']) {
 			$doc = $this->render_block('Description', $doc);
@@ -68,8 +70,9 @@ class Parser {
 		$html = '';
 		$posts = $this->template['Posts'];
 		foreach ($posts as $index => $post) {
+			$markup = $this->prepare_post($post, $block);
 			//render post blocks non-specific to type: permalink, etc.
-			$html .= $this->render_post($post, $this->select_by_type($post, $block));
+			$html .= $this->render_post($post, $this->select_by_type($post, $markup));
 		}
 		return $html;
 	}
@@ -114,11 +117,33 @@ class Parser {
 					case 'Audio':
 						$html = $this->render_audio_post($post, $markup);
 						break;
+					case 'Video':
+						$html = $this->render_video_post($post, $markup);
+						break;	
 				}
 				$html = preg_replace($pattern, $html, $block);
 			}			
 			return $html;
 		}
+	}
+	
+	public function prepare_post($post, $markup) {
+		$block = $markup;
+		$block = $this->render_variable('Permalink', $post, $block);
+		$block = $this->render_variable('PostId', $post, $block);
+		$block = $this->render_post_date($post, $block);
+		if ($post['Reblog']) {
+			$block = $this->render_reblog_info($post, $block);
+		}		
+		if ($post['NoteCount']) {
+			$block = $this->render_variable('NoteCount', $post, $block);
+			$block = $this->render_block('NoteCount', $block);
+			$block = preg_replace('/{NoteCountWithLabel}/', $post['NoteCount']." notes", $block);
+		} else {
+			$block = $this->strip_block('NoteCount',$block);
+		}
+		$block = $this->render_block('More', $block);
+		return $block;
 	}
 	
 	public function render_block($name, $html) {
@@ -146,6 +171,79 @@ class Parser {
 	
 	public function cleanup($document) {
 		return preg_replace($this->blocks, '', $document);
+	}
+	
+	protected function render_post_date($post, $block) {
+		$html = $block;
+		$time = $post['Timestamp'];
+		$right_now = time();
+		$day_difference = 1;
+        while (strtotime('-'.$day_difference.' day', $right_now) >= $time)
+        {
+            $day_difference++;
+        }		
+		
+		$html = $this->render_variable('Timestamp', $post, $html);
+		$html = preg_replace('/{TimeAgo}/', $day_difference." days ago", $html);
+		$html = preg_replace('/{DayOfMonth}/', strftime('%e',$time), $html);
+		$html = preg_replace('/{DayOfMonthWithZero}/', strftime('%d',$time), $html);
+		$html = preg_replace('/{DayOfWeek}/', strftime('%A',$time), $html);
+		$html = preg_replace('/{ShortDayOfWeek}/', strftime('%a',$time), $html);
+		$html = preg_replace('/{DayOfWeekNumber}/', strftime('%u',$time), $html);
+		$html = preg_replace('/{DayOfYear}/', strftime('%j',$time), $html);		
+		$html = preg_replace('/{WeekOfYear}/', strftime('%V',$time), $html);		
+		$html = preg_replace('/{Month}/', strftime('%B',$time), $html);
+		$html = preg_replace('/{ShortMonth}/', strftime('%b',$time), $html);
+		$html = preg_replace('/{MonthNumber}|{MonthNumberWithZero}/', strftime('%m',$time), $html);
+		$html = preg_replace('/{Year}/', strftime('%Y',$time), $html);
+		$html = preg_replace('/{ShortYear}/', strftime('%y',$time), $html);		
+		$html = preg_replace('/{AmPm}/', strftime('%P',$time), $html);
+		$html = preg_replace('/{CapitalAmPm}/', strftime('%p',$time), $html);
+		$html = preg_replace('/{12Hour}/', strftime('%l',$time), $html);
+		$html = preg_replace('/{12HourWithZero}/', strftime('%I',$time), $html);
+		$html = preg_replace('/{24Hour}|{24HourWithZero}/', strftime('%H',$time), $html);
+		$html = preg_replace('/{Minutes}/', strftime('%M',$time), $html);
+		$html = preg_replace('/{Seconds}/', strftime('%S',$time), $html);
+
+		$html = $this->render_block('Date', $html);
+		return $html;
+	}
+	
+	protected function render_reblog_info($post, $block) {
+		$html = $block;
+		$reblog = $post['Reblog'];
+		$root = $reblog['Root'];
+		
+		$html = $this->render_variable('ReblogParentName', $reblog, $html);
+		$html = $this->render_variable('ReblogParentTitle', $reblog, $html);
+		$html = $this->render_variable('ReblogParentURL', $reblog, $html);
+		$portraits = array(
+			'ReblogParentPortraitURL-16', 'ReblogParentPortraitURL-24', 'ReblogParentPortraitURL-30', 
+			'ReblogParentPortraitURL-40', 'ReblogParentPortraitURL-48', 'ReblogParentPortraitURL-64',
+			'ReblogParentPortraitURL-96', 'ReblogParentPortraitURL-128'
+		);
+		foreach($portraits as $portrait) {
+			$html = $this->render_variable($portrait, $reblog, $html);
+		}
+		$html = $this->render_block('Reblog', $html);
+		$html = $this->render_block('RebloggedFrom', $html);
+		
+		if ($root) {
+			$html = $this->render_variable('ReblogRootName', $root, $html);
+			$html = $this->render_variable('ReblogRootTitle', $root, $html);
+			$html = $this->render_variable('ReblogRootURL', $root, $html);
+			$root_portraits = array(
+				'ReblogRootPortraitURL-16', 'ReblogRootPortraitURL-24', 'ReblogRootPortraitURL-30', 
+				'ReblogRootPortraitURL-40', 'ReblogRootPortraitURL-48', 'ReblogRootPortraitURL-64',
+				'ReblogRootPortraitURL-96', 'ReblogRootPortraitURL-128'
+			);
+			foreach($root_portraits as $portrait) {
+				$html = $this->render_variable($portrait, $root, $html);
+			}
+			$html = $this->render_block('RebloggedFromReblog', $html);
+		}
+		
+		return $html;
 	}
 	
 	protected function render_text_post($post, $block) {
@@ -305,6 +403,20 @@ class Parser {
 		}
 		
 		return $html;		
+	}
+	
+	protected function render_video_post($post, $block) {
+		$html = $block;
+		$html = $this->render_variable('Video-500', $post, $html);
+		$html = $this->render_variable('Video-400', $post, $html);
+		$html = $this->render_variable('Video-200', $post, $html);
+		if ($post['Caption']) {
+			$html = $this->render_variable('Caption', $post, $html);
+			$html = $this->render_block('Caption', $html);
+		} else {
+			$html = $this->strip_block('Caption',$html);
+		}
+		return $html;
 	}
 	
 	protected function create_audio_player($audio_file, $color = '') {
