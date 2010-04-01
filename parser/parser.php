@@ -1,6 +1,7 @@
 <?php
 
 require_once 'spyc.php';
+require_once 'simple_html_dom.php';
 
 class Parser {
 	
@@ -79,7 +80,7 @@ class Parser {
 		
 		$doc = $this->seek($doc);
 		// Cleanup additional blocks
-		$doc = $this->cleanup($doc);
+		// $doc = $this- >cleanup($doc);
 		
 		return $doc;
 	}
