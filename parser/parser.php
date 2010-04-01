@@ -13,6 +13,7 @@ class Parser {
 	public $type = '';
 	
 	public $defaults = array(
+		'RSS'				=> '/rss',
 		'Favicon' 			=> 'http://assets.tumblr.com/images/default_avatar_16.gif',
 		'PortraitURL-16' 	=> "http://assets.tumblr.com/images/default_avatar_16.gif",
 		'PortraitURL-24' 	=> "http://assets.tumblr.com/images/default_avatar_24.gif",
@@ -22,7 +23,7 @@ class Parser {
 		'PortraitURL-64' 	=> "http://assets.tumblr.com/images/default_avatar_64.gif",
 		'PortraitURL-96' 	=> "http://assets.tumblr.com/images/default_avatar_96.gif",
 		'PortraitURL-128' 	=> "http://assets.tumblr.com/images/default_avatar_128.gif",
-		'CopyrightYears'	=> '2007-2010'
+		'CopyrightYears'	=> '2007-2010',		
 	);
 	
 	public $template = array();	
@@ -78,13 +79,20 @@ class Parser {
 		
 		$doc = $this->seek($doc);
 		// Cleanup additional blocks
-		// $doc = $this->cleanup($doc);
+		$doc = $this->cleanup($doc);
 		
 		return $doc;
 	}
 	
 	public function build_index($doc) {
+		// probably should build these dynamically
+		$pages = array(
+			'NextPage'			=> '/page/2',
+			'CurrentPage'		=> '1',
+			'TotalPages'		=> '100'
+		);
 		$doc = $this->render_block('IndexPage', $doc);
+		$doc = $this->render_pagination($pages, $doc);
 		$doc = $this->get_posts($doc);
 		return $doc;
 	}
@@ -132,6 +140,28 @@ class Parser {
 		
 		$html = preg_replace($this->block_pattern('Followed'), $following_group, $html);
 		$html = $this->render_block('Following', $html);
+		return $html;
+	}
+	
+	public function render_pagination($pages, $document) {
+		$html = $document;
+		if ($pages['NextPage'] || $pages['PreviousPage']) {
+			if ($pages['NextPage']) {
+				$html = preg_replace('/{NextPage}/', $pages['NextPage'], $html);
+				$html = $this->render_block('NextPage', $html);
+			} else {
+				$html = $this->strip_block('NextPage', $html);
+			}
+			if ($pages['PreviousPage']) {
+				$html = preg_replace('/{PreviousPage}/', $pages['PreviousPage'], $html);
+				$html = $this->render_block('PreviousPage', $html);
+			} else {
+				$html = $this->strip_block('PreviousPage', $html);
+			}			
+			$html = $this->render_block('Pagination', $html);
+		} else {
+			$html = $this->strip_block('Pagination', $html);
+		}
 		return $html;
 	}
 	
@@ -311,7 +341,7 @@ class Parser {
 				foreach ($matcher[2] as $tag_block) {
 					$tag_block = preg_replace('/{Tag}/', $tag, $tag_block);
 					$tag_block = preg_replace('/{URLSafeTag}/', $safe_tag, $tag_block);
-					$tag_block = preg_replace('/{TagURL}|{TagURLChrono}/', "tagged/".$safe_tag, $tag_block);					
+					$tag_block = preg_replace('/{TagURL}|{TagURLChrono}/', "/tagged/".$safe_tag, $tag_block);					
 					$tag_group .= $tag_block;
 				}
 			}
