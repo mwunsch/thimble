@@ -1,15 +1,11 @@
 <?php
 
-// load the parser
-require('parser/parser.php');
+require 'theme.php';
 
-$data = file_get_contents('data/demo.yml');
-$theme = new Parser($data);
+$DATA = 'demo.yml';
+$THEME = 'redux.html';
 
-$document = file_get_contents('themes/redux.html');
-
-print_r($theme->parse($document));
-
-
+$theme = new Parser(file_get_contents('data/'.$DATA));
+echo $theme->parse(file_get_contents('themes/'.$THEME));
 
 ?>
