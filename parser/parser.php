@@ -2,7 +2,7 @@
 
 require_once 'spyc.php';
 
-class Parser {
+class ThimbleParser {
 	
 	protected $variables = '/{([A-Za-z][A-Za-z0-9\-]*)}/';
 	
