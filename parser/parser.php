@@ -1,7 +1,6 @@
 <?php
 
 require_once 'spyc.php';
-require_once 'simple_html_dom.php';
 
 class Parser {
 	
@@ -41,12 +40,15 @@ class Parser {
 	public function parse($document) {
 		$doc = $document;
 		
-		// generate metatags.
+		// Generate Options from Meta tags
+		$doc = $this->generate_meta($doc);
 		
+		// Generate based on page type
 		if ($this->type == 'index') {
 			$doc = $this->build_index($doc);
 		}
-				
+		
+		// render Global Blocks		
 		if ($this->template['Description']) {
 			$doc = $this->render_block('Description', $doc);
 		}
@@ -78,10 +80,94 @@ class Parser {
 			$doc = $this->strip_block('Twitter',$doc);
 		}
 		
+		// Render remaining global variables;
 		$doc = $this->seek($doc);
 		// Cleanup additional blocks
-		// $doc = $this- >cleanup($doc);
-		
+		return $this->cleanup($doc);
+	}
+	
+	public function generate_meta($document) {
+		$dom = new DomDocument();
+		@$dom->loadHTML($document);
+		$meta = $this->build_options($dom->getElementsByTagName("meta"));
+		$document = $this->parse_options($meta, $document);
+		return $document;
+	}
+	
+	public function build_options($meta_elements) {
+		$meta = array(
+			'Color' => array(),
+			'Font' => array(),
+			'Boolean' => array(),
+			'Text' => array(),
+			'Image' => array()
+		);
+		foreach ($meta_elements as $element) {
+			if ($element->hasAttribute('name') && $element->hasAttribute('content')) {
+				$name = $element->getAttribute('name');
+				$content = $element->getAttribute('content');
+				$option = explode(':',$name);
+				switch($option[0]) {
+					case 'color':
+						$meta['Color'][$option[1]] = $content;
+						break;
+					case 'font':
+						$meta['Font'][$option[1]] = $content;
+						break;
+					case 'if':
+						$meta['Boolean'][$option[1]] = $content;
+						break;
+					case 'text':
+						$meta['Text'][$option[1]] = $content;
+						break;
+					case 'image':
+						$meta['Image'][$option[1]] = $content;
+						break;
+				}
+			}
+		}
+		return $meta;
+	}
+	
+	public function parse_options($options, $doc) {
+		foreach ($options['Color'] as $name => $color) {
+			$doc = preg_replace("/{color:$name}/", $color, $doc);
+		}
+		foreach ($options['Font'] as $name => $font) {
+			$doc = preg_replace("/{font:$name}/", $font, $doc);
+		}
+		foreach ($options['Boolean'] as $name => $bool) {
+			$block_name = implode(preg_split('/\s/',ucwords($name)));
+			if ($bool) {
+				$doc = $this->render_block("If$block_name",$doc);
+				$doc = $this->strip_block("IfNot$block_name",$doc);
+			} else {
+				$doc = $this->render_block("IfNot$block_name",$doc);
+				$doc = $this->strip_block("If$block_name",$doc);
+			}
+		}
+		foreach ($options['Text'] as $name => $text) {
+			$block_name = implode(preg_split('/\s/',ucwords($name)));
+			if ($text) {
+				$doc = preg_replace("/{text:$name}/", $text, $doc);
+				$doc = $this->render_block("If$block_name",$doc);
+				$doc = $this->strip_block("IfNot$block_name",$doc);
+			} else {
+				$doc = $this->render_block("IfNot$block_name",$doc);
+				$doc = $this->strip_block("If$block_name",$doc);
+			}
+		}
+		foreach ($options['Image'] as $name => $img) {
+			$block_name = implode(preg_split('/\s/',ucwords($name)));
+			if ($img) {
+				$doc = preg_replace("/{image:$name}/", $img, $doc);
+				$doc = $this->render_block('If'.$block_name.'Image',$doc);
+				$doc = $this->strip_block('IfNot'.$block_name.'Image',$doc);
+			} else {
+				$doc = $this->render_block('IfNot'.$block_name.'Image',$doc);
+				$doc = $this->strip_block('If'.$block_name.'Image',$doc);
+			}
+		}
 		return $doc;
 	}
 	
