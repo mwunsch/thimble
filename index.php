@@ -2,7 +2,7 @@
 <html dir="ltr" lang="en-US" id="thimblr">
 <head>
 	<meta charset="utf-8" />
-	<title>Thimblr</title>
+	<title>Thimble</title>
 	<meta name="Copyright" content="Copyright (c) 2010 Mark Wunsch" />
 	<script type="text/javascript" src="assets/jquery.js"></script>
 	<script type="text/javascript" src="assets/main.js"></script>	
