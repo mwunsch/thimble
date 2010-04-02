@@ -7,9 +7,7 @@ class Parser {
 	protected $variables = '/{([A-Za-z][A-Za-z0-9\-]*)}/';
 	
 	protected $blocks = '/{block:([A-Za-z][A-Za-z0-9]*)}(.*?){\/block:\\1}/s';
-	
-	public $data = array();
-	
+		
 	public $type = '';
 	
 	public $defaults = array(
