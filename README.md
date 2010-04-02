@@ -36,7 +36,7 @@ It reads data out of a [YAML](http://yaml.org/) file. If you'd like to render yo
 
 ## Copyright
 
-Thimble is Copyright (c) 2010 Mark Wunsch and is licensed under the [MIT License](http://creativecommons.org/licenses/MIT/). 
+Thimble is Copyright (c) 2010 Mark Wunsch and is licensed under the [GPL License](http://www.gnu.org/licenses/gpl.html). 
 
 Tumblr is Copyright (c) Tumblr, Inc. Thimble is NOT affiliated with Tumblr, Inc.
 
