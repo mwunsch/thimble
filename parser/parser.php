@@ -4,9 +4,9 @@ require_once 'spyc.php';
 
 class ThimbleParser {
 	
-	protected $variables = '/{([A-Za-z][A-Za-z0-9\-]*)}/';
+	protected $variables = '/{([A-Za-z][A-Za-z0-9\-]*)}/i';
 	
-	protected $blocks = '/{block:([A-Za-z][A-Za-z0-9]*)}(.*?){\/block:\\1}/s';
+	protected $blocks = '/{block:([A-Za-z][A-Za-z0-9]*)}(.*?){\/block:\\1}/is';
 		
 	public $type = '';
 	
@@ -32,7 +32,7 @@ class ThimbleParser {
 	}
 	
 	public function block_pattern($block_name) {
-		return '/{block:('.$block_name.')}(.*?){\/block:\\1}/s';
+		return '/{block:('.$block_name.')}(.*?){\/block:\\1}/is';
 	}
 	
 	public function parse($document) {
@@ -56,7 +56,7 @@ class ThimbleParser {
 			$doc = $this->strip_block('Following',$doc);
 		}
 		if ($this->template['AskLabel']) {
-			$doc = preg_replace('/{AskLabel}/', $this->template['AskLabel'], $doc);
+			$doc = preg_replace('/{AskLabel}/i', $this->template['AskLabel'], $doc);
 			$doc = $this->render_block('AskEnabled',$doc);
 		} else {
 			$doc = $this->strip_block('AskEnabled',$doc);
@@ -73,7 +73,7 @@ class ThimbleParser {
 		}
 		if ($this->template['TwitterUsername']) {
 			$doc = $this->render_block('Twitter',$doc);
-			$doc = preg_replace('/{TwitterUsername}/', $this->template['TwitterUsername'], $doc);			
+			$doc = preg_replace('/{TwitterUsername}/i', $this->template['TwitterUsername'], $doc);			
 		} else {
 			$doc = $this->strip_block('Twitter',$doc);
 		}
@@ -129,10 +129,10 @@ class ThimbleParser {
 	
 	public function parse_options($options, $doc) {
 		foreach ($options['Color'] as $name => $color) {
-			$doc = preg_replace("/{color:$name}/", $color, $doc);
+			$doc = preg_replace("/{color:$name}/i", $color, $doc);
 		}
 		foreach ($options['Font'] as $name => $font) {
-			$doc = preg_replace("/{font:$name}/", $font, $doc);
+			$doc = preg_replace("/{font:$name}/i", $font, $doc);
 		}
 		foreach ($options['Boolean'] as $name => $bool) {
 			$block_name = implode(preg_split('/\s/',ucwords($name)));
@@ -147,7 +147,7 @@ class ThimbleParser {
 		foreach ($options['Text'] as $name => $text) {
 			$block_name = implode(preg_split('/\s/',ucwords($name)));
 			if ($text) {
-				$doc = preg_replace("/{text:$name}/", $text, $doc);
+				$doc = preg_replace("/{text:$name}/i", $text, $doc);
 				$doc = $this->render_block("If$block_name",$doc);
 				$doc = $this->strip_block("IfNot$block_name",$doc);
 			} else {
@@ -158,7 +158,7 @@ class ThimbleParser {
 		foreach ($options['Image'] as $name => $img) {
 			$block_name = implode(preg_split('/\s/',ucwords($name)));
 			if ($img) {
-				$doc = preg_replace("/{image:$name}/", $img, $doc);
+				$doc = preg_replace("/{image:$name}/i", $img, $doc);
 				$doc = $this->render_block('If'.$block_name.'Image',$doc);
 				$doc = $this->strip_block('IfNot'.$block_name.'Image',$doc);
 			} else {
@@ -189,8 +189,8 @@ class ThimbleParser {
 		if ($has_page_block) {
 			foreach ($pages as $page) {
 				foreach ($matcher[2] as $page_block) {
-					$page_block = preg_replace('/{Label}/', $page['Label'], $page_block);
-					$page_block = preg_replace('/{URL}/', $page['URL'], $page_block);					
+					$page_block = preg_replace('/{Label}/i', $page['Label'], $page_block);
+					$page_block = preg_replace('/{URL}/i', $page['URL'], $page_block);					
 					$page_group .= $page_block;
 				}
 			}
@@ -207,16 +207,16 @@ class ThimbleParser {
 		if ($has_following_block) {
 			foreach ($following as $user) {
 				foreach ($matcher[2] as $follows) {
-					$follows = preg_replace('/{FollowedName}/', $user['Name'], $follows);
-					$follows = preg_replace('/{FollowedTitle}/', $user['Title'], $follows);
-					$follows = preg_replace('/{FollowedURL}/', $user['URL'], $follows);
+					$follows = preg_replace('/{FollowedName}/i', $user['Name'], $follows);
+					$follows = preg_replace('/{FollowedTitle}/i', $user['Title'], $follows);
+					$follows = preg_replace('/{FollowedURL}/i', $user['URL'], $follows);
 					$portraits = array(
 						'PortraitURL-16', 'PortraitURL-24', 'PortraitURL-30', 
 						'PortraitURL-40', 'PortraitURL-48', 'PortraitURL-64',
 						'PortraitURL-96', 'PortraitURL-128'
 					);
 					foreach ($portraits as $portrait) {
-						$follows = preg_replace('/{Followed'.$portrait.'}/', $user[$portrait], $follows);
+						$follows = preg_replace('/{Followed'.$portrait.'}/i', $user[$portrait], $follows);
 					}
 					$following_group .= $follows;
 				}
@@ -232,13 +232,13 @@ class ThimbleParser {
 		$html = $document;
 		if ($pages['NextPage'] || $pages['PreviousPage']) {
 			if ($pages['NextPage']) {
-				$html = preg_replace('/{NextPage}/', $pages['NextPage'], $html);
+				$html = preg_replace('/{NextPage}/i', $pages['NextPage'], $html);
 				$html = $this->render_block('NextPage', $html);
 			} else {
 				$html = $this->strip_block('NextPage', $html);
 			}
 			if ($pages['PreviousPage']) {
-				$html = preg_replace('/{PreviousPage}/', $pages['PreviousPage'], $html);
+				$html = preg_replace('/{PreviousPage}/i', $pages['PreviousPage'], $html);
 				$html = $this->render_block('PreviousPage', $html);
 			} else {
 				$html = $this->strip_block('PreviousPage', $html);
@@ -339,7 +339,7 @@ class ThimbleParser {
 		if ($post['NoteCount']) {
 			$block = $this->render_variable('NoteCount', $post, $block);
 			$block = $this->render_block('NoteCount', $block);
-			$block = preg_replace('/{NoteCountWithLabel}/', $post['NoteCount']." notes", $block);
+			$block = preg_replace('/{NoteCountWithLabel}/i', $post['NoteCount']." notes", $block);
 		} else {
 			$block = $this->strip_block('NoteCount',$block);
 		}
@@ -368,7 +368,7 @@ class ThimbleParser {
 	}
 	
 	public function render_variable($name, $post, $block) {
-		return preg_replace('/{'.$name.'}/', $post[$name], $block);
+		return preg_replace('/{'.$name.'}/i', $post[$name], $block);
 	} 
 	
 	public function seek($context) {
@@ -390,26 +390,26 @@ class ThimbleParser {
         }		
 		
 		$html = $this->render_variable('Timestamp', $post, $html);
-		$html = preg_replace('/{TimeAgo}/', $day_difference." days ago", $html);
-		$html = preg_replace('/{DayOfMonth}/', strftime('%e',$time), $html);
-		$html = preg_replace('/{DayOfMonthWithZero}/', strftime('%d',$time), $html);
-		$html = preg_replace('/{DayOfWeek}/', strftime('%A',$time), $html);
-		$html = preg_replace('/{ShortDayOfWeek}/', strftime('%a',$time), $html);
-		$html = preg_replace('/{DayOfWeekNumber}/', strftime('%u',$time), $html);
-		$html = preg_replace('/{DayOfYear}/', strftime('%j',$time), $html);		
-		$html = preg_replace('/{WeekOfYear}/', strftime('%V',$time), $html);		
-		$html = preg_replace('/{Month}/', strftime('%B',$time), $html);
-		$html = preg_replace('/{ShortMonth}/', strftime('%b',$time), $html);
-		$html = preg_replace('/{MonthNumber}|{MonthNumberWithZero}/', strftime('%m',$time), $html);
-		$html = preg_replace('/{Year}/', strftime('%Y',$time), $html);
-		$html = preg_replace('/{ShortYear}/', strftime('%y',$time), $html);		
-		$html = preg_replace('/{AmPm}/', strftime('%P',$time), $html);
-		$html = preg_replace('/{CapitalAmPm}/', strftime('%p',$time), $html);
-		$html = preg_replace('/{12Hour}/', strftime('%l',$time), $html);
-		$html = preg_replace('/{12HourWithZero}/', strftime('%I',$time), $html);
-		$html = preg_replace('/{24Hour}|{24HourWithZero}/', strftime('%H',$time), $html);
-		$html = preg_replace('/{Minutes}/', strftime('%M',$time), $html);
-		$html = preg_replace('/{Seconds}/', strftime('%S',$time), $html);
+		$html = preg_replace('/{TimeAgo}/i', $day_difference." days ago", $html);
+		$html = preg_replace('/{DayOfMonth}/i', strftime('%e',$time), $html);
+		$html = preg_replace('/{DayOfMonthWithZero}/i', strftime('%d',$time), $html);
+		$html = preg_replace('/{DayOfWeek}/i', strftime('%A',$time), $html);
+		$html = preg_replace('/{ShortDayOfWeek}/i', strftime('%a',$time), $html);
+		$html = preg_replace('/{DayOfWeekNumber}/i', strftime('%u',$time), $html);
+		$html = preg_replace('/{DayOfYear}/i', strftime('%j',$time), $html);		
+		$html = preg_replace('/{WeekOfYear}/i', strftime('%V',$time), $html);		
+		$html = preg_replace('/{Month}/i', strftime('%B',$time), $html);
+		$html = preg_replace('/{ShortMonth}/i', strftime('%b',$time), $html);
+		$html = preg_replace('/{MonthNumber}|{MonthNumberWithZero}/i', strftime('%m',$time), $html);
+		$html = preg_replace('/{Year}/i', strftime('%Y',$time), $html);
+		$html = preg_replace('/{ShortYear}/i', strftime('%y',$time), $html);		
+		$html = preg_replace('/{AmPm}/i', strftime('%P',$time), $html);
+		$html = preg_replace('/{CapitalAmPm}/i', strftime('%p',$time), $html);
+		$html = preg_replace('/{12Hour}/i', strftime('%l',$time), $html);
+		$html = preg_replace('/{12HourWithZero}/i', strftime('%I',$time), $html);
+		$html = preg_replace('/{24Hour}|{24HourWithZero}/i', strftime('%H',$time), $html);
+		$html = preg_replace('/{Minutes}/i', strftime('%M',$time), $html);
+		$html = preg_replace('/{Seconds}/i', strftime('%S',$time), $html);
 
 		$html = $this->render_block('Date', $html);
 		return $html;
@@ -424,9 +424,9 @@ class ThimbleParser {
 			foreach ($tags as $tag) {
 				$safe_tag = preg_replace('/\s/','_',strtolower($tag));
 				foreach ($matcher[2] as $tag_block) {
-					$tag_block = preg_replace('/{Tag}/', $tag, $tag_block);
-					$tag_block = preg_replace('/{URLSafeTag}/', $safe_tag, $tag_block);
-					$tag_block = preg_replace('/{TagURL}|{TagURLChrono}/', "/tagged/".$safe_tag, $tag_block);					
+					$tag_block = preg_replace('/{Tag}/i', $tag, $tag_block);
+					$tag_block = preg_replace('/{URLSafeTag}/i', $safe_tag, $tag_block);
+					$tag_block = preg_replace('/{TagURL}|{TagURLChrono}/i', "/tagged/".$safe_tag, $tag_block);					
 					$tag_group .= $tag_block;
 				}
 			}
@@ -508,7 +508,7 @@ class ThimbleParser {
 		}
 		if ($post['Caption']) {
 			$html = $this->render_variable('Caption', $post, $html);
-			$html = preg_replace('/{PhotoAlt}/', strip_tags($post['Caption']), $html);
+			$html = preg_replace('/{PhotoAlt}/i', strip_tags($post['Caption']), $html);
 			$html = $this->render_block('Caption', $html);
 		} else {
 			$html = $this->strip_block('Caption',$html);
@@ -522,11 +522,11 @@ class ThimbleParser {
 		if ($post['LinkURL']) {
 			$html = $this->render_variable('LinkURL', $post, $html);
 			$html = preg_replace(
-				'/{LinkOpenTag}/', 
+				'/{LinkOpenTag}/i', 
 				'<a href="'.$post['LinkURL'].'">', 
 				$html
 			);
-			$html = preg_replace('/{LinkCloseTag}/', '</a>', $html);
+			$html = preg_replace('/{LinkCloseTag}/i', '</a>', $html);
 		}
 		return $html;
 	}
@@ -537,7 +537,7 @@ class ThimbleParser {
 		if ($post['Name']) {
 			$html = $this->render_variable('Name', $post, $block);
 		} else {
-			$html = preg_replace('/{Name}/', $post['URL'], $html);
+			$html = preg_replace('/{Name}/i', $post['URL'], $html);
 		}
 		if ($post['Description']) {
 			$html = $this->render_variable('Description', $post, $html);
@@ -561,9 +561,9 @@ class ThimbleParser {
 						} else {
 							$alt = 'even';
 						}
-						$line_markup .= preg_replace('/{Line}/', $line, $each_line);
-						$line_markup = preg_replace('/{Alt}/', $alt, $line_markup);
-						$line_markup = preg_replace('/{Label}/', $label, $line_markup);
+						$line_markup .= preg_replace('/{Line}/i', $line, $each_line);
+						$line_markup = preg_replace('/{Alt}/i', $alt, $line_markup);
+						$line_markup = preg_replace('/{Label}/i', $label, $line_markup);
 						$line_markup = $this->render_block('Label', $line_markup);
 					}
 				}
@@ -589,14 +589,14 @@ class ThimbleParser {
 		} else {
 			$html = $this->strip_block('ExternalAudio', $html);
 		}
-		$html = preg_replace('/{AudioPlayer}/', $this->create_audio_player($audio_file,'black'), $html);
-		$html = preg_replace('/{AudioPlayerBlack}/', $this->create_audio_player($audio_file,'black'), $html);
-		$html = preg_replace('/{AudioPlayerWhite}/', $this->create_audio_player($audio_file), $html);
-		$html = preg_replace('/{AudioPlayerGrey}/', $this->create_audio_player($audio_file, 'grey'), $html);
+		$html = preg_replace('/{AudioPlayer}/i', $this->create_audio_player($audio_file,'black'), $html);
+		$html = preg_replace('/{AudioPlayerBlack}/i', $this->create_audio_player($audio_file,'black'), $html);
+		$html = preg_replace('/{AudioPlayerWhite}/i', $this->create_audio_player($audio_file), $html);
+		$html = preg_replace('/{AudioPlayerGrey}/i', $this->create_audio_player($audio_file, 'grey'), $html);
 		
 		$html = $this->render_variable('PlayCount', $post, $html);
-		$html = preg_replace('/{FormatPlayCount}/', number_format($post['PlayCount']), $html);
-		$html = preg_replace('/{PlayCountWithLabel}/', number_format($post['PlayCount'])." plays", $html);
+		$html = preg_replace('/{FormatPlayCount}/i', number_format($post['PlayCount']), $html);
+		$html = preg_replace('/{PlayCountWithLabel}/i', number_format($post['PlayCount'])." plays", $html);
 		
 		if ($post['Caption']) {
 			$html = $this->render_variable('Caption', $post, $html);

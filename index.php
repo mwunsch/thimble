@@ -21,7 +21,8 @@
 		<label for="theme-selector">thimble</label>
 		<select name="theme" id="theme-selector">
 			<?php
-				foreach (scandir('./themes') as $theme) {
+				foreach (glob('themes/*.html') as $theme) {
+                    $theme = basename($theme);
 					if (($theme !== '.') && ($theme !== '..')) {
 						echo "<option value=\"$theme\">$theme</option>
 ";
