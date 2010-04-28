@@ -381,7 +381,15 @@ class ThimbleParser {
 	}
 	
 	public function seek($context) {
-		return preg_replace_callback($this->variables, array($this, 'convert_properties'), $context);
+		preg_match_all($this->variables, $context, $match);
+		foreach ($match[1] as $variable) {
+			if (array_key_exists($variable, $this->template)) {
+				$context = $this->render_variable($variable, $this->template[$variable], $context);
+			} else {
+				$context = $this->render_variable($variable, '', $context);
+			}
+		}
+		return $context;
 	}
 	
 	public function cleanup($document) {
@@ -672,13 +680,7 @@ class ThimbleParser {
 PLAYER;
 	
 	}
-	
-	protected function convert_properties($match) {
-		if (array_key_exists($match[1], $this->template)) {
-			return $this->template[$match[1]];
-		}
-	}
-	
+		
 }
 
 ?>
