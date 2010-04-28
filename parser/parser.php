@@ -80,7 +80,7 @@ class ThimbleParser {
 			$doc = $this->strip_block('Following',$doc);
 		}
 		if ($this->template['AskLabel']) {
-			$doc = preg_replace('/{AskLabel}/i', $this->template['AskLabel'], $doc);
+			$doc = $this->render_variable('AskLabel', $this->template['AskLabel'], $doc);
 			$doc = $this->render_block('AskEnabled',$doc);
 		} else {
 			$doc = $this->strip_block('AskEnabled',$doc);
@@ -97,7 +97,7 @@ class ThimbleParser {
 		}
 		if ($this->template['TwitterUsername']) {
 			$doc = $this->render_block('Twitter',$doc);
-			$doc = preg_replace('/{TwitterUsername}/i', $this->template['TwitterUsername'], $doc);			
+			$doc = $this->render_variable('TwitterUsername', $this->template['TwitterUsername'], $doc);			
 		} else {
 			$doc = $this->strip_block('Twitter',$doc);
 		}
@@ -153,10 +153,10 @@ class ThimbleParser {
 	
 	public function parse_options($options, $doc) {
 		foreach ($options['Color'] as $name => $color) {
-			$doc = preg_replace("/{color:$name}/i", $color, $doc);
+			$doc = $this->render_variable("color:$name", $color, $doc);
 		}
 		foreach ($options['Font'] as $name => $font) {
-			$doc = preg_replace("/{font:$name}/i", $font, $doc);
+			$doc = $this->render_variable("font:$name", $font, $doc);
 		}
 		foreach ($options['Boolean'] as $name => $bool) {
 			$block_name = implode(preg_split('/\s/',ucwords($name)));
@@ -171,7 +171,7 @@ class ThimbleParser {
 		foreach ($options['Text'] as $name => $text) {
 			$block_name = implode(preg_split('/\s/',ucwords($name)));
 			if ($text) {
-				$doc = preg_replace("/{text:$name}/i", $text, $doc);
+				$doc = $this->render_variable("text:$name", $text, $doc);
 				$doc = $this->render_block("If$block_name",$doc);
 				$doc = $this->strip_block("IfNot$block_name",$doc);
 			} else {
@@ -182,7 +182,7 @@ class ThimbleParser {
 		foreach ($options['Image'] as $name => $img) {
 			$block_name = implode(preg_split('/\s/',ucwords($name)));
 			if ($img) {
-				$doc = preg_replace("/{image:$name}/i", $img, $doc);
+				$doc = $this->render_variable("image:$name", $img, $doc);
 				$doc = $this->render_block('If'.$block_name.'Image',$doc);
 				$doc = $this->strip_block('IfNot'.$block_name.'Image',$doc);
 			} else {
@@ -213,8 +213,8 @@ class ThimbleParser {
 		if ($has_page_block) {
 			foreach ($pages as $page) {
 				foreach ($matcher[2] as $page_block) {
-					$page_block = preg_replace('/{Label}/i', $page['Label'], $page_block);
-					$page_block = preg_replace('/{URL}/i', $page['URL'], $page_block);					
+					$page_block = $this->render_variable('Label', $page['Label'], $page_block);
+					$page_block = $this->render_variable('URL', $page['URL'], $page_block);					
 					$page_group .= $page_block;
 				}
 			}
@@ -231,16 +231,16 @@ class ThimbleParser {
 		if ($has_following_block) {
 			foreach ($following as $user) {
 				foreach ($matcher[2] as $follows) {
-					$follows = preg_replace('/{FollowedName}/i', $user['Name'], $follows);
-					$follows = preg_replace('/{FollowedTitle}/i', $user['Title'], $follows);
-					$follows = preg_replace('/{FollowedURL}/i', $user['URL'], $follows);
+					$follows = $this->render_variable('FollowedName', $user['Name'], $follows);
+					$follows = $this->render_variable('FollowedTitle', $user['Title'], $follows);
+					$follows = $this->render_variable('FollowedURL', $user['URL'], $follows);
 					$portraits = array(
 						'PortraitURL-16', 'PortraitURL-24', 'PortraitURL-30', 
 						'PortraitURL-40', 'PortraitURL-48', 'PortraitURL-64',
 						'PortraitURL-96', 'PortraitURL-128'
 					);
 					foreach ($portraits as $portrait) {
-						$follows = preg_replace('/{Followed'.$portrait.'}/i', $user[$portrait], $follows);
+						$follows = $this->render_variable('Followed'.$portrait, $user[$portrait], $follows);
 					}
 					$following_group .= $follows;
 				}
@@ -256,13 +256,13 @@ class ThimbleParser {
 		$html = $document;
 		if ($pages['NextPage'] || $pages['PreviousPage']) {
 			if ($pages['NextPage']) {
-				$html = preg_replace('/{NextPage}/i', $pages['NextPage'], $html);
+				$html = $this->render_variable('NextPage', $pages['NextPage'], $html);
 				$html = $this->render_block('NextPage', $html);
 			} else {
 				$html = $this->strip_block('NextPage', $html);
 			}
 			if ($pages['PreviousPage']) {
-				$html = preg_replace('/{PreviousPage}/i', $pages['PreviousPage'], $html);
+				$html = $this->render_variable('PreviousPage', $pages['PreviousPage'], $html);
 				$html = $this->render_block('PreviousPage', $html);
 			} else {
 				$html = $this->strip_block('PreviousPage', $html);
@@ -363,7 +363,7 @@ class ThimbleParser {
 		if ($post['NoteCount']) {
 			$block = $this->render_post_variable('NoteCount', $post, $block);
 			$block = $this->render_block('NoteCount', $block);
-			$block = preg_replace('/{NoteCountWithLabel}/i', $post['NoteCount']." notes", $block);
+			$block = $this->render_variable('NoteCountWithLabel', $post['NoteCount']." notes", $block);
 		} else {
 			$block = $this->strip_block('NoteCount',$block);
 		}
@@ -399,26 +399,26 @@ class ThimbleParser {
         }		
 		
 		$html = $this->render_post_variable('Timestamp', $post, $html);
-		$html = preg_replace('/{TimeAgo}/i', $day_difference." days ago", $html);
-		$html = preg_replace('/{DayOfMonth}/i', strftime('%e',$time), $html);
-		$html = preg_replace('/{DayOfMonthWithZero}/i', strftime('%d',$time), $html);
-		$html = preg_replace('/{DayOfWeek}/i', strftime('%A',$time), $html);
-		$html = preg_replace('/{ShortDayOfWeek}/i', strftime('%a',$time), $html);
-		$html = preg_replace('/{DayOfWeekNumber}/i', strftime('%u',$time), $html);
-		$html = preg_replace('/{DayOfYear}/i', strftime('%j',$time), $html);		
-		$html = preg_replace('/{WeekOfYear}/i', strftime('%V',$time), $html);		
-		$html = preg_replace('/{Month}/i', strftime('%B',$time), $html);
-		$html = preg_replace('/{ShortMonth}/i', strftime('%b',$time), $html);
+		$html = $this->render_variable('TimeAgo', $day_difference." days ago", $html);
+		$html = $this->render_variable('DayOfMonth', strftime('%e',$time), $html);
+		$html = $this->render_variable('DayOfMonthWithZero', strftime('%d',$time), $html);
+		$html = $this->render_variable('DayOfWeek', strftime('%A',$time), $html);
+		$html = $this->render_variable('ShortDayOfWeek', strftime('%a',$time), $html);
+		$html = $this->render_variable('DayOfWeekNumber', strftime('%u',$time), $html);
+		$html = $this->render_variable('DayOfYear', strftime('%j',$time), $html);		
+		$html = $this->render_variable('WeekOfYear', strftime('%V',$time), $html);		
+		$html = $this->render_variable('Month', strftime('%B',$time), $html);
+		$html = $this->render_variable('ShortMonth', strftime('%b',$time), $html);
 		$html = preg_replace('/{MonthNumber}|{MonthNumberWithZero}/i', strftime('%m',$time), $html);
-		$html = preg_replace('/{Year}/i', strftime('%Y',$time), $html);
-		$html = preg_replace('/{ShortYear}/i', strftime('%y',$time), $html);		
-		$html = preg_replace('/{AmPm}/i', strftime('%P',$time), $html);
-		$html = preg_replace('/{CapitalAmPm}/i', strftime('%p',$time), $html);
-		$html = preg_replace('/{12Hour}/i', strftime('%l',$time), $html);
-		$html = preg_replace('/{12HourWithZero}/i', strftime('%I',$time), $html);
+		$html = $this->render_variable('Year', strftime('%Y',$time), $html);
+		$html = $this->render_variable('ShortYear', strftime('%y',$time), $html);		
+		$html = $this->render_variable('AmPm', strftime('%P',$time), $html);
+		$html = $this->render_variable('CapitalAmPm', strftime('%p',$time), $html);
+		$html = $this->render_variable('12Hour', strftime('%l',$time), $html);
+		$html = $this->render_variable('12HourWithZero', strftime('%I',$time), $html);
 		$html = preg_replace('/{24Hour}|{24HourWithZero}/i', strftime('%H',$time), $html);
-		$html = preg_replace('/{Minutes}/i', strftime('%M',$time), $html);
-		$html = preg_replace('/{Seconds}/i', strftime('%S',$time), $html);
+		$html = $this->render_variable('Minutes', strftime('%M',$time), $html);
+		$html = $this->render_variable('Seconds', strftime('%S',$time), $html);
 
 		$html = $this->render_block('Date', $html);
 		return $html;
@@ -433,8 +433,8 @@ class ThimbleParser {
 			foreach ($tags as $tag) {
 				$safe_tag = preg_replace('/\s/','_',strtolower($tag));
 				foreach ($matcher[2] as $tag_block) {
-					$tag_block = preg_replace('/{Tag}/i', $tag, $tag_block);
-					$tag_block = preg_replace('/{URLSafeTag}/i', $safe_tag, $tag_block);
+					$tag_block = $this->render_variable('Tag', $tag, $tag_block);
+					$tag_block = $this->render_variable('URLSafeTag', $safe_tag, $tag_block);
 					$tag_block = preg_replace('/{TagURL}|{TagURLChrono}/i', "/tagged/".$safe_tag, $tag_block);					
 					$tag_group .= $tag_block;
 				}
@@ -517,7 +517,7 @@ class ThimbleParser {
 		}
 		if ($post['Caption']) {
 			$html = $this->render_post_variable('Caption', $post, $html);
-			$html = preg_replace('/{PhotoAlt}/i', strip_tags($post['Caption']), $html);
+			$html = $this->render_variable('PhotoAlt', strip_tags($post['Caption']), $html);
 			$html = $this->render_block('Caption', $html);
 		} else {
 			$html = $this->strip_block('Caption',$html);
@@ -530,12 +530,12 @@ class ThimbleParser {
 		}
 		if ($post['LinkURL']) {
 			$html = $this->render_post_variable('LinkURL', $post, $html);
-			$html = preg_replace(
-				'/{LinkOpenTag}/i', 
+			$html = $this->render_variable(
+				'LinkOpenTag', 
 				'<a href="'.$post['LinkURL'].'">', 
 				$html
 			);
-			$html = preg_replace('/{LinkCloseTag}/i', '</a>', $html);
+			$html = $this->render_variable('LinkCloseTag', '</a>', $html);
 		}
 		return $html;
 	}
@@ -546,7 +546,7 @@ class ThimbleParser {
 		if ($post['Name']) {
 			$html = $this->render_post_variable('Name', $post, $block);
 		} else {
-			$html = preg_replace('/{Name}/i', $post['URL'], $html);
+			$html = $this->render_variable('Name', $post['URL'], $html);
 		}
 		if ($post['Description']) {
 			$html = $this->render_post_variable('Description', $post, $html);
@@ -570,9 +570,9 @@ class ThimbleParser {
 						} else {
 							$alt = 'even';
 						}
-						$line_markup .= preg_replace('/{Line}/i', $line, $each_line);
-						$line_markup = preg_replace('/{Alt}/i', $alt, $line_markup);
-						$line_markup = preg_replace('/{Label}/i', $label, $line_markup);
+						$line_markup .= $this->render_variable('Line', $line, $each_line);
+						$line_markup = $this->render_variable('Alt', $alt, $line_markup);
+						$line_markup = $this->render_variable('Label', $label, $line_markup);
 						$line_markup = $this->render_block('Label', $line_markup);
 					}
 				}
@@ -598,14 +598,14 @@ class ThimbleParser {
 		} else {
 			$html = $this->strip_block('ExternalAudio', $html);
 		}
-		$html = preg_replace('/{AudioPlayer}/i', $this->create_audio_player($audio_file,'black'), $html);
-		$html = preg_replace('/{AudioPlayerBlack}/i', $this->create_audio_player($audio_file,'black'), $html);
-		$html = preg_replace('/{AudioPlayerWhite}/i', $this->create_audio_player($audio_file), $html);
-		$html = preg_replace('/{AudioPlayerGrey}/i', $this->create_audio_player($audio_file, 'grey'), $html);
+		$html = $this->render_variable('AudioPlayer', $this->create_audio_player($audio_file,'black'), $html);
+		$html = $this->render_variable('AudioPlayerBlack', $this->create_audio_player($audio_file,'black'), $html);
+		$html = $this->render_variable('AudioPlayerWhite', $this->create_audio_player($audio_file), $html);
+		$html = $this->render_variable('AudioPlayerGrey', $this->create_audio_player($audio_file, 'grey'), $html);
 		
 		$html = $this->render_post_variable('PlayCount', $post, $html);
-		$html = preg_replace('/{FormatPlayCount}/i', number_format($post['PlayCount']), $html);
-		$html = preg_replace('/{PlayCountWithLabel}/i', number_format($post['PlayCount'])." plays", $html);
+		$html = $this->render_variable('FormatPlayCount', number_format($post['PlayCount']), $html);
+		$html = $this->render_variable('PlayCountWithLabel', number_format($post['PlayCount'])." plays", $html);
 		
 		if ($post['Caption']) {
 			$html = $this->render_post_variable('Caption', $post, $html);
