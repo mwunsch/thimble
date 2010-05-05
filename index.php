@@ -11,6 +11,7 @@
 		body { font-size: 13px; line-height: 1.3; font-family: Helvetica, Arial,sans-serif; margin: 0; color: #333; }
 		#theme-select { height: 30px; padding: 0 15px; line-height: 30px; background: #2C4762; color: #fff; }
 		#theme-select label { font-family: 'Bookman Old Style', Georgia, serif; font-weight: bold; font-size: 18px; vertical-align: middle; padding-right: 8px;}
+		#theme-select .small { font-family: Helvetica, Arial, sans-serif; font-weight: normal; font-size: 11px;}
 		#theme-select a { float: right; color: #fff; }
 		#theme-container {position:absolute; left:0px; right:0px; top:30px; bottom:0px;}
 		#theme-preview {width:100%; height:100%;}
@@ -30,6 +31,8 @@
 				}
 			?>
 		</select>
+		<input type="checkbox" name="auto-refresh" id="auto-refresh">
+		<label for="auto-refresh" class="small">Auto Refresh?</label>
 		<a href="http://www.tumblr.com/docs/en/custom_themes">Theme Documentation</a>
 	</form>
 	<div id="theme-container">
