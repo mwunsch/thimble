@@ -26,7 +26,7 @@ $(document).ready(function(){
   
   form.bind('submit',function(e){
     var location;
-    if (hash) {
+    if (window.location.hash) {
       location = window.location.href.split('#')[0];
     } else {
       location = window.location.href;
