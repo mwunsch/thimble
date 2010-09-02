@@ -57,15 +57,16 @@ $(document).ready(function(){
     $.each(options, function (key, value) {
       $.each(value, function (name, content) {
         var p = $('<p><label>'+name+'</label></p>');
-        switch (key) {
-        case 'Boolean':
-          p.prepend('<input type="checkbox" name="'+name+'" '+(parseInt(content) ? 'checked' : '')+' />');
+        var k = key.toLowerCase();
+        switch (k) {
+        case 'boolean':
+          p.prepend('<input type="checkbox" name="if:'+name+'" '+(content ? 'checked' : '')+' />');
           break;
-        case 'Font':
-          p.append(fontSelector(content).attr('name',name));
+        case 'font':
+          p.append(fontSelector(content).attr('name',k+':'+name));
           break;
         default:
-          p.append('<input type="text" value="'+content+'" name="'+name+'" />');
+          p.append('<input type="text" value="'+content+'" name="'+k+':'+name+'" />');
           break; 
         }
         p.insertBefore(selector.children(':submit'));
