@@ -1,6 +1,7 @@
 <?php
 
 require_once 'spyc.php';
+require_once 'simple_html_dom.php';
 
 class ThimbleParser {
 	
@@ -59,11 +60,11 @@ class ThimbleParser {
 		return $this->render_variable($name, $post[$name], $block);
 	}
 	
-	public function parse($document) {
+	public function parse($document, $appearance_options = array()) {
 		$doc = $document;
 		
 		// Generate Options from Meta tags
-		$doc = $this->generate_meta($doc);
+		$doc = $this->generate_meta($doc, $appearance_options);
 		
 		// Generate based on page type
 		if ($this->type == 'index') {
@@ -108,16 +109,15 @@ class ThimbleParser {
 		return $this->cleanup($doc);
 	}
 	
-	public function generate_meta($document) {
-		$dom = new DomDocument();
-		@$dom->loadHTML($document);
-		$meta = $this->build_options($dom->getElementsByTagName("meta"));
-		$document = $this->parse_options($meta, $document);
-		return $document;
-	}
+	public function generate_meta($document, $appearance = array()) {
+		$dom = new simple_html_dom();
+		@$dom->load($document);
+    return $this->build_options($dom, $appearance);
+  }
 	
-	public function build_options($meta_elements) {
-		$meta = array(
+	public function build_options($dom, $meta_overrides = array()) {
+    $meta_elements = $dom->find("meta[name]");
+    $meta = array(
 			'Color' => array(),
 			'Font' => array(),
 			'Boolean' => array(),
@@ -125,10 +125,21 @@ class ThimbleParser {
 			'Image' => array()
 		);
 		foreach ($meta_elements as $element) {
-			if ($element->hasAttribute('name') && $element->hasAttribute('content')) {
-				$name = $element->getAttribute('name');
-				$content = $element->getAttribute('content');
-				$option = explode(':',$name);
+			if (isset($element->content)) {
+				$name = $element->name;
+        $option = explode(':',$name);
+        if (count($meta_overrides) > 0) {
+          if (array_key_exists($name, $meta_overrides)) {
+            $element->content = $meta_overrides[$name];
+          } elseif (array_key_exists(str_replace(' ','_',$name), $meta_overrides)) {
+            $element->content = $meta_overrides[str_replace(' ','_',$name)];
+          } else {
+            if ($element->content) {
+              $element->content = '';
+            }
+          }
+        }
+        $content = $element->content;
 				switch($option[0]) {
 					case 'color':
 						$meta['Color'][$option[1]] = $content;
@@ -148,7 +159,7 @@ class ThimbleParser {
 				}
 			}
 		}
-		return $meta;
+    return $this->parse_options($meta, $dom->save());
 	}
 	
 	public function parse_options($options, $doc) {
