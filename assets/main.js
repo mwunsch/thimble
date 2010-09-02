@@ -88,10 +88,14 @@ $(document).ready(function(){
 
   form.bind('submit',function(e){
     var location;
+    var modal = appearanceSelector.siblings('.options');
     if (window.location.hash) {
       location = window.location.href.split('#')[0];
     } else {
       location = window.location.href;
+    }
+    if (modal.is(':visible')) {
+      appearanceSelector.trigger('click');
     }
     window.location = location+"#/" + select.children(':selected').val();
     clearTimeout(THIMBLE_POLL);
