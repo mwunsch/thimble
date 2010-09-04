@@ -1,6 +1,7 @@
 <?php
 
 require_once 'spyc.php';
+require_once 'simple_html_dom.php';
 
 class ThimbleParser {
 	
@@ -59,11 +60,11 @@ class ThimbleParser {
 		return $this->render_variable($name, $post[$name], $block);
 	}
 	
-	public function parse($document) {
+	public function parse($document, $appearance_options = array()) {
 		$doc = $document;
 		
 		// Generate Options from Meta tags
-		$doc = $this->generate_meta($doc);
+		$doc = $this->generate_meta($doc, $appearance_options);
 		
 		// Generate based on page type
 		if ($this->type == 'index') {
@@ -108,16 +109,15 @@ class ThimbleParser {
 		return $this->cleanup($doc);
 	}
 	
-	public function generate_meta($document) {
-		$dom = new DomDocument();
-		@$dom->loadHTML($document);
-		$meta = $this->build_options($dom->getElementsByTagName("meta"));
-		$document = $this->parse_options($meta, $document);
-		return $document;
-	}
+	public function generate_meta($document, $appearance = array()) {
+		$dom = new simple_html_dom();
+		@$dom->load($document);
+    return $this->build_options($dom, $appearance);
+  }
 	
-	public function build_options($meta_elements) {
-		$meta = array(
+	public function build_options($dom, $meta_overrides = array()) {
+    $meta_elements = $dom->find("meta[name]");
+    $meta = array(
 			'Color' => array(),
 			'Font' => array(),
 			'Boolean' => array(),
@@ -125,10 +125,21 @@ class ThimbleParser {
 			'Image' => array()
 		);
 		foreach ($meta_elements as $element) {
-			if ($element->hasAttribute('name') && $element->hasAttribute('content')) {
-				$name = $element->getAttribute('name');
-				$content = $element->getAttribute('content');
-				$option = explode(':',$name);
+			if (isset($element->content)) {
+				$name = $element->name;
+        $option = explode(':',$name);
+        if (count($meta_overrides) > 0) {
+          if (array_key_exists($name, $meta_overrides)) {
+            $element->content = $meta_overrides[$name];
+          } elseif (array_key_exists(str_replace(' ','_',$name), $meta_overrides)) {
+            $element->content = $meta_overrides[str_replace(' ','_',$name)];
+          } else {
+            if ($element->content) {
+              $element->content = '';
+            }
+          }
+        }
+        $content = $element->content;
 				switch($option[0]) {
 					case 'color':
 						$meta['Color'][$option[1]] = $content;
@@ -148,7 +159,7 @@ class ThimbleParser {
 				}
 			}
 		}
-		return $meta;
+    return $this->parse_options($meta, $dom->save());
 	}
 	
 	public function parse_options($options, $doc) {
@@ -284,74 +295,61 @@ class ThimbleParser {
 	}
 	
 	public function render_posts($matches) {
-		$block = $matches[2];
-		$html = '';
+    $block = $matches[2];
+    $html = '';
 		$posts = $this->template['Posts'];
-		foreach ($posts as $index => $post) {
+    foreach ($posts as $index => $post) {
 			if (($index+1) % 2) {
 				$block = $this->render_block('Odd', $block);
 			} else {
 				$block = $this->render_block('Even', $block);
 			}
 			$block = $this->render_block('Post'.($index + 1),$block);
-			$markup = $this->prepare_post($post, $block);
-			//render post blocks non-specific to type: permalink, etc.
-			$html .= $this->render_post($post, $this->select_by_type($post, $markup));
-		}
-		return $html;
-	}
-	
-	public function select_by_type($post, $block) {
-		$post_type = $this->block_pattern($post['Type']);
-		$found = preg_match_all($post_type, $block, $posts);
-		if ($found) {
-			$split = preg_split($post_type, $block);
-			$stripped = array();
-			foreach ($split as $component) {
-				$stripped[] = preg_replace($this->blocks, '', $component);
-			}
-			$html = implode(implode($posts[0]),$stripped);
-			return $html;
-		}
+      $html .= $this->render_post($post, $block);
+    }
+    return $html;
 	}
 	
 	public function render_post($post, $block) {
+    $html = $this->prepare_post($post, $block);
 		$post_type = $post['Type'];
+    $markup = '';
 		$pattern = $this->block_pattern($post_type);
-		$does_match = preg_match_all($pattern, $block, $posts);
-		$html = '';
-		if ($does_match) {
-			foreach($posts[2] as $index => $markup) {
-				switch($post_type) {
-					case 'Text':
-						$html = $this->render_text_post($post, $markup);
-						break;
-					case 'Photo':
-						$html = $this->render_photo_post($post, $markup);
-						break;	
-					case 'Quote':
-						$html = $this->render_quote_post($post, $markup);
-						break;
-					case 'Link':
-						$html = $this->render_link_post($post, $markup);
-						break;
-					case 'Chat':
-						$html = $this->render_chat_post($post, $markup);
-						break;
-					case 'Audio':
-						$html = $this->render_audio_post($post, $markup);
-						break;
-					case 'Video':
-						$html = $this->render_video_post($post, $markup);
-						break;	
-					case 'Answer':
-						$html = $this->render_answer_post($post, $markup);
-						break;
-				}
-				$html = preg_replace($pattern, $html, $block);
-			}			
-			return $html;
-		}
+		$does_match = preg_match_all($pattern, $html, $posts);
+    if ($does_match) {
+      foreach($posts[2] as $index => $post_block) {
+        switch($post_type) {
+        case 'Text':
+          $markup = $this->render_text_post($post, $post_block);
+          break;
+        case 'Photo':
+          $markup = $this->render_photo_post($post, $post_block);
+          break;	
+        case 'Quote':
+          $markup = $this->render_quote_post($post, $post_block);
+          break;
+        case 'Link':
+          $markup = $this->render_link_post($post, $post_block);
+          break;
+        case 'Chat':
+          $markup = $this->render_chat_post($post, $post_block);
+          break;
+        case 'Audio':
+          $markup = $this->render_audio_post($post, $post_block);
+          break;
+        case 'Video':
+          $markup = $this->render_video_post($post, $post_block);
+          break;	
+        case 'Answer':
+          $markup = $this->render_answer_post($post, $post_block);
+          break;
+        }
+      }
+    }
+    if ($markup) {
+      $html = preg_replace($pattern, $markup, $html);
+    }
+    return $html;
 	}
 	
 	public function prepare_post($post, $markup) {
