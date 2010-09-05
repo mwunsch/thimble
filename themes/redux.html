@@ -1,33 +1,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
-    
-        .                                  .o8       oooo               
-      .o8                                 "888       `888               
-    .o888oo oooo  oooo  ooo. .oo.  .oo.    888oooo.   888  oooo d8b     
-      888   `888  `888  `888P"Y88bP"Y88b   d88' `88b  888  `888""8P     
-      888    888   888   888   888   888   888   888  888   888         
-      888 .  888   888   888   888   888   888   888  888   888     .o. 
-      "888"  `V88V"V8P' o888o o888o o888o  `Y8bod8P' o888o d888b    Y8P
+                                         
+        .                                 .o8       oooo               
+      .o8                                "888       `888               
+    .o888oo oooo  oooo  ooo. .oo.  .oo.   888oooo.   888  oooo d8b     
+      888   `888  `888  `888P"Y88bP"Y88b  d88' `88b  888  `888""8P     
+      888    888   888   888   888   888  888   888  888   888        
+      888 .  888   888   888   888   888  888   888  888   888    .o. 
+      "888"  `V88V"V8P' o888o o888o o888o `Y8bod8P' o888o d888b   Y8P
 
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <!-- DEFAULT VARIABLES -->
     <meta name="color:Background" content="#3b627e" />
+    
     <meta name="font:Title" content="Arial" />
     <meta name="font:Body" content="Arial" />
     <meta name="font:Accent" content="Lucida Sans" />
+    
     <meta name="if:Show People I Follow" content="1" />
     <meta name="if:Show Tags" content="1" />
     <meta name="if:Show Album Art on Audio Posts" content="1" />
+    <meta name="if:Enable Jump Pagination" content="0" />
+    
     <meta name="text:Disqus Shortname" content="" />
+    
     <meta name="image:Header" content="" />
     <meta name="image:Background" content="" />
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{Title}{block:SearchPage}, Search results for: {SearchQuery}{/block:SearchPage}{block:PostSummary}, {PostSummary}{/block:PostSummary}</title>
+    <title>{Title}{block:SearchPage}, {lang:Search results for SearchQuery}{/block:SearchPage}{block:PostSummary}, {PostSummary}{/block:PostSummary}</title>
     {block:Description}<meta name="description" content="{MetaDescription}" />{/block:Description}
     <link rel="shortcut icon" href="{Favicon}" />
+    <link rel="apple-touch-icon" href="{PortraitURL-128}"/>
     <link rel="alternate" type="application/rss+xml" href="{RSS}" />
     <style type="text/css">
         body {
@@ -39,7 +45,8 @@
         
         .clear {
             clear: both;
-            height: 1px;
+            height: 0px;
+            overflow: hidden;
         }
         
         a img {
@@ -57,7 +64,7 @@
                 font-size: 50px;
                 font-weight: bold;
                 font-family: {font:Title};
-                text-shadow: #2f2f2f 1px 3px 5px;
+                text-shadow: 1px 3px 5px rgba(0,0,0, 0.5);
                 letter-spacing: -1px;
             }
             
@@ -149,6 +156,14 @@
                             padding: 0;
                         }
                         
+                        #wrapper #content .post .copy pre {
+                            margin: 10px 0px 10px 0px;
+                            padding: 10px;
+                            background-color: #e6e6e6;
+                            font: normal 11px Courier, monospace;
+                            overflow: auto;
+                        }
+                        
                         #wrapper #content .post .copy > p:first-child {
                             margin-top: 0;
                         }
@@ -182,6 +197,7 @@
                             color: #666;
                             font-family: {font:Accent};
                             font-size: 11px;
+                            text-transform: lowercase;
                         }
                         
                             #wrapper #content .post .audio .meta a {
@@ -209,7 +225,7 @@
                         #wrapper #content .post .question .nipple {
                             width: 13px;
                             height: 7px;
-                            background: #f1f1f1 url('http://static.tumblr.com/thpaaos/wqzkvsd69/mask_ask.png');
+                            background: #f1f1f1 url('http://assets.tumblr.com/themes/redux/ask-mask.png');
                             position: absolute;
                             bottom: -7px;
                             left: 30px;
@@ -293,7 +309,7 @@
                         margin-top: 10px;
                     }
                         
-                        #wrapper #content .post .footer:hover {
+                        #wrapper #content .post .footer.for_permalink:hover {
                             opacity: 0.9;
                             filter: alpha(opacity=90);
                             -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
@@ -323,6 +339,30 @@
                             
                                 #wrapper #content .post .footer .tags .tag-commas:last-child {
                                     display: none;
+                                }
+                            
+                            #wrapper #content .post .footer.with_source_url .tags {
+                                max-width: 330px;
+                                float: left;
+                            }
+                            
+                            #wrapper #content .post .footer.with_source_url .source_url {
+                                float: right;
+                                max-width: 160px;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                
+                            }
+                            
+                                #wrapper #content .post .footer.with_source_url .source_url img {
+                                    vertical-align: top;
+                                    -moz-opacity: 0.5;
+                                    opacity: 0.5;
+                                }
+                                
+                                #wrapper #content .post .footer.with_source_url .source_url:hover img {
+                                    -moz-opacity: 0.7;
+                                    opacity: 0.7;
                                 }
                         
                         #wrapper #content .post a {
@@ -366,6 +406,7 @@
                         #wrapper #content #navigation {
                             text-align: right;
                             padding-bottom: 35px;
+                            text-transform: lowercase;
                         }
                         
                             #wrapper #content #navigation a {
@@ -381,6 +422,23 @@
                                 filter: alpha(opacity=90);
                                 -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
                             }
+                            
+                        #wrapper #content #navigation.jump_pagination {}
+                            
+                            #wrapper #content #navigation.jump_pagination a {
+                                margin: 0 0 0 4px;
+                            }
+                            
+                            #wrapper #content #navigation.jump_pagination .current_page {
+                                color: #fff;
+                                background-color: rgba(255,255,255, 0.1);
+                                border: 2px solid #fff;
+                                padding: 3px 8px;
+                                margin: 0 0 0 4px;
+                                cursor: default;
+                            }
+                            
+                            #wrapper #content #navigation.jump_pagination .jump_page {}
                             
                             #wrapper #content .post .notecontainer {
                                 background: #eaeaea;
@@ -437,10 +495,22 @@
                 #wrapper #content #searchresults {
                     color: #fff;
                     margin: 0 0 15px 0;
-                    text-shadow: #2f2f2f 1px 3px 5px;
+                    text-shadow: 1px 3px 5px rgba(0,0,0, 0.5);
                     font-family: {font:Body};
                     font-size: 20px;
                 }
+                
+                    #wrapper #content #searchresults .search_query {
+                        font-weight: bold;
+                    }
+                    
+                    #wrapper #content #searchresults .search_query:before {
+                        content:'“';
+                    }
+                    
+                    #wrapper #content #searchresults .search_query:after {
+                        content:'”';
+                    }
             
             #wrapper #sidebar {
                 width: 250px;
@@ -479,6 +549,12 @@
                         margin-bottom: 15px;
                         font-size: 12px;
                     }
+                    
+                        #wrapper #sidebar #top #pages.ask_and_submit {
+                            display: none;
+                            {block:AskEnabled}display: block;{/block:AskEnabled}
+                            {block:SubmissionsEnabled}display: block;{/block:SubmissionsEnabled}
+                        }
                     
                         #wrapper #sidebar #top #pages a.page {
                             display: block;
@@ -587,11 +663,27 @@
                     }
                     
                     #wrapper #sidebar #top .heading#followontumblr {
-                        background: url('http://assets.tumblr.com/themes/redux/sidebar-follow-on-verbose.png') 10px center no-repeat {color:Background};
+                        background: url('http://assets.tumblr.com/themes/redux/sidebar-follow-on-en_US.png') center left no-repeat {color:Background};
                         text-indent: -9999px;
                         -moz-border-radius: 4px;
                         -webkit-border-radius: 4px;
                         border-radius: 4px;
+                        
+                        {block:German}
+                            background-image: url('http://assets.tumblr.com/themes/redux/sidebar-follow-on-de_DE.png');
+                        {/block:German}
+                        
+                        {block:Japanese}
+                            background-image: url('http://assets.tumblr.com/themes/redux/sidebar-follow-on-ja_JP.png');
+                        {/block:Japanese}
+                        
+                        {block:Italian}
+                            background-image: url('http://assets.tumblr.com/themes/redux/sidebar-follow-on-it_IT.png');
+                        {/block:Italian}
+                        
+                        {block:French}
+                            background-image: url('http://assets.tumblr.com/themes/redux/sidebar-follow-on-fr_FR.png');
+                        {/block:French}
                     }
                     
                     #wrapper #sidebar #top .heading#followontumblr:hover,
@@ -654,6 +746,7 @@
                             
                             #wrapper #sidebar #top #buttons .button#button-rss {
                                 background-image: url('http://assets.tumblr.com/themes/redux/button-rss.png?2');
+                                text-transform: capitalize;
                             }
                             
                             #wrapper #sidebar #top #buttons .button#button-random {
@@ -761,19 +854,16 @@
         <div id="content">
             
             {block:SearchPage}
-                <div id="searchresults" class="searchresultcount">{SearchResultCount} results for <strong>"{SearchQuery}"</strong></div>
+                {block:SearchResults}
+                    <div id="searchresults">{lang:SearchResultCount results for SearchQuery 2}</div>
+                {/block:SearchResults}
+                
+                {block:NoSearchResults}
+                    <div id="searchresults">{lang:No search results for SearchQuery 2}</div>
+                {/block:NoSearchResults}
             {/block:SearchPage}
             
-            {block:NoSearchResults}
-                <style type="text/css">
-                    .searchresultcount {
-                        display: none;
-                    }
-                </style>
-                <div id="searchresults">No results for <strong>"{SearchQuery}"</strong></div>
-            {/block:NoSearchResults}
-            
-            {block:Posts}            
+            {block:Posts}
                 <div class="post">
                     
                     {block:Photo}
@@ -790,14 +880,14 @@
                         {block:IfShowAlbumArtOnAudioPosts}
                             {block:AlbumArt}
                                 <div class="album_art">
-                                    <img src="{AlbumArtURL}" alt="{block:Artist}{Artist}{/block:Artist}{block:TrackName} - {TrackName}{/block:TrackName}" style="margin-bottom: 10px" />
+                                    <img src="{AlbumArtURL}" alt="{block:Artist}{Artist}{/block:Artist}{block:TrackName} - {TrackName}{/block:TrackName}" style="margin-bottom:10px;" />
                                 </div>
                             {/block:AlbumArt}
                         {/block:IfShowAlbumArtOnAudioPosts}
                         
                         <div class="audio">
                             <div class="player">{AudioPlayerWhite}</div>
-                            <div class="meta">{PlayCountWithLabel}{block:ExternalAudio} &bull; <a href="{ExternalAudioURL}">download</a>{/block:ExternalAudio}</div>
+                            <div class="meta">{PlayCountWithLabel}{block:ExternalAudio}<span class="download_external_audio"> &bull; <a href="{ExternalAudioURL}">{lang:Download}</a></span>{/block:ExternalAudio}</div>
                             <div class="clear"></div>
                         </div>
                         <div class="clear"></div>
@@ -811,7 +901,7 @@
                             {block:Source}
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                     <tr>
-                                        <td valign="top" style="width: 20px">&mdash;</td>
+                                        <td valign="top" style="width:20px;">&mdash;</td>
                                         <td valign="top" class="quote_source">
                                             {Source}
                                         </td>
@@ -833,7 +923,7 @@
                         </div>
                         <div class="asker_container"><img src="{AskerPortraitURL-24}">{Asker}</div>
                         <div class="copy">{Answer}</div>
-                    {/block:Answer}
+                    {block:Answer}
                     
                     {block:Chat}
                         {block:Title}<div class="title">{Title}</div>{/block:Title}
@@ -845,7 +935,7 @@
                             </div>
                         </div>
                         <div class="clear"></div>
-                        <div style="height: 10px"></div>
+                        <div style="height:10px;"></div>
                     {/block:Chat}
                     
                     {block:Link}
@@ -855,38 +945,53 @@
                     
                     {block:Date}
                         <a href="{Permalink}">
-                            <div class="footer">
+                            <div class="footer for_permalink">
                                 <div class="date">
-                                    {block:Reblog}Reblogged{/block:Reblog}
-                                    {block:NotReblog}Posted{/block:NotReblog}
+                                    {block:Reblog}
+                                        {lang:Reblogged TimeAgo from ReblogParentName} {block:RebloggedFromReblog}(<span style="text-transform:lowercase;">{lang:Originally from ReblogRootName}</span>){/block:RebloggedFromReblog}
+                                    {/block:Reblog}
                                     
-                                    {TimeAgo}
-                                    
-                                    {block:Reblog}from {ReblogParentName} {block:RebloggedFromReblog}(originally from {ReblogRootName}){/block:RebloggedFromReblog}{/block:Reblog}
-                                    {block:FromBookmarklet}from bookmarklet{/block:FromBookmarklet}
-                                    {block:FromMobile}from mobile{/block:FromMobile}
+                                    {block:NotReblog}
+                                        {lang:Posted TimeAgo from source}
+                                    {/block:NotReblog}
                                 </div>
-                                <div class="notes">{block:NoteCount}{NoteCountWithLabel}{/block:NoteCount} {block:IfDisqusShortname}{block:NoteCount}&bull;{/block:NoteCount} <a href="{Permalink}#disqus_thread">view comments</a>{/block:IfDisqusShortname}</div>
+                                <div class="notes">{block:NoteCount}{NoteCountWithLabel}{/block:NoteCount} {block:IfDisqusShortname}{block:NoteCount}&bull;{/block:NoteCount} <a href="{Permalink}#disqus_thread">{lang:View comments}</a>{/block:IfDisqusShortname}</div>
                                 <div class="clear"></div>
                             </div>
                         </a>
                     {/block:Date}
                     
-                    {block:IfShowTags}
-                        {block:HasTags}<div class="footer"><div class="tags">Tagged: {block:Tags}<a href="{TagURL}">{Tag}</a><span class="tag-commas">, </span>{/block:Tags}.</div></div>{/block:HasTags}
-                    {/block:IfShowTags}
+                    <div class="footer {block:ContentSource}with_source_url{/block:ContentSource}" style="
+                        display:none;
+                        {block:IfShowTags}{block:HasTags}display:block;{/block:HasTags}{/block:IfShowTags}
+                        {block:ContentSource}display:block;{/block:ContentSource}
+                    ">
+                        {block:IfShowTags}
+                            {block:HasTags}<div class="tags">{lang:Tagged}: {block:Tags}<a href="{TagURL}">{Tag}</a><span class="tag-commas">, </span>{/block:Tags}.</div>{/block:HasTags}
+                        {/block:IfShowTags}
+                        
+                        {block:ContentSource}
+                            <a href="{SourceURL}" class="source_url">
+                                {lang:Source}:
+                                {block:SourceLogo}<img src="{BlackLogoURL}" width="{LogoWidth}" height="{LogoHeight}" alt="{SourceTitle}" />{/block:SourceLogo}
+                                {block:NoSourceLogo}{SourceTitle}{/block:NoSourceLogo}
+                            </a>
+                        {/block:ContentSource}
+                        
+                        <div class="clear"></div>
+                    </div>
                     
                     {block:PostNotes}<div class="notecontainer">{PostNotes}</div>{/block:PostNotes}
                     
                     {block:IfDisqusShortname}
                         {block:Permalink}
-                            <div class="notecontainer" style="margin: 20px 0 1px 0; padding: 1px 10px 10px 10px;">
+                            <div class="notecontainer" style="margin:20px 0 1px 0; padding:1px 10px 10px 10px;">
                                 <div id="disqus_thread"></div>
                                 <script type="text/javascript" src="http://disqus.com/forums/{text:Disqus Shortname}/embed.js"></script>
-                                <noscript><a href="http://{text:Disqus Shortname}.disqus.com/?url=ref">View the discussion thread.</a></noscript>
+                                <noscript><a href="http://{text:Disqus Shortname}.disqus.com/?url=ref">{lang:View the discussion thread}</a></noscript>
                             </div>
-                            <div style="text-align: right; margin-top: 5px">
-                                <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+                            <div style="text-align:right; margin-top:5px;">
+                                {lang:Blog comments powered by Disqus 2}
                             </div>
                         {/block:Permalink}
                     {/block:IfDisqusShortname}
@@ -896,9 +1001,23 @@
             {/block:Posts}
             
             {block:Pagination}
-                <div id="navigation">
-                    {block:PreviousPage}<a href="{PreviousPage}">&larr; previous page</a>{/block:PreviousPage}
-                    {block:NextPage}<a href="{NextPage}">next page &rarr;</a>{/block:NextPage}
+                <div id="navigation" {block:IfEnableJumpPagination}class="jump_pagination"{/block:IfEnableJumpPagination}>
+                    {block:PreviousPage}<a href="{PreviousPage}">&larr; {lang:Previous}</a>{/block:PreviousPage}
+                    
+                    {block:IfEnableJumpPagination}
+                        {block:JumpPagination length="5"}
+                            {block:CurrentPage}
+                                <span class="current_page">{PageNumber}</span>
+                            {/block:CurrentPage}
+                            
+                            {block:JumpPage}
+                                <a class="jump_page" href="{URL}">{PageNumber}</a>
+                            {/block:JumpPage}
+                            
+                        {/block:JumpPagination}
+                    {/block:IfEnableJumpPagination}
+                    
+                    {block:NextPage}<a href="{NextPage}">{lang:Next page} &rarr;</a>{/block:NextPage}
                 </div>
             {/block:Pagination}
             
@@ -908,6 +1027,12 @@
             <div id="top">
                 <div id="avatar"><a href="/"><img src="{PortraitURL-128}" /></a></div>
                 <div id="description">{Description}</div>
+                
+                <div id="pages" class="ask_and_submit">
+                    {block:AskEnabled}<a href="/ask" class="page">{AskLabel}</a>{/block:AskEnabled}
+                    {block:SubmissionsEnabled}<a href="/submit" class="page">{SubmitLabel}</a>{/block:SubmissionsEnabled}
+                    <div class="clear"></div>
+                </div>
                 
                 {block:HasPages}
                     <div id="pages">
@@ -921,20 +1046,20 @@
                         <input type="hidden" name="t" value="{Name}" />
                         <input type="hidden" name="scope" value="all_of_tumblr" />
                         <input type="text" name="q" class="query" value="{SearchQuery}" />
-                        <input type="submit" value="Search" class="submit" />
+                        <input type="submit" value="{lang:Search}" class="submit" />
                         <div class="clear"></div>
                     </form>
                 </div>
                 <div id="search-scope">
-                    <input type="radio" id="search-scope-me" name="scope" checked onclick="document.getElementById('search-form').action='/search'" /> <label for="search-scope-me" onclick="document.getElementById('search-form').action='/search'">My Blog</label>
-                    <input type="radio" id="search-scope-all" name="scope" onclick="document.getElementById('search-form').action='http://tumblr.com/search'" /> <label for="search-scope-all" onclick="document.getElementById('search-form').action='http://tumblr.com/search'">All of Tumblr</label>
+                    <input type="radio" id="search-scope-me" name="scope" checked onclick="document.getElementById('search-form').action='/search'" /> <label for="search-scope-me" onclick="document.getElementById('search-form').action='/search'">{lang:My blog}</label>
+                    <input type="radio" id="search-scope-all" name="scope" onclick="document.getElementById('search-form').action='http://www.tumblr.com/search'" /> <label for="search-scope-all" onclick="document.getElementById('search-form').action='http://www.tumblr.com/search'">{lang:All of Tumblr}</label>
                 </div>
                 
-                <a href="http://www.tumblr.com/follow/{Name}"><div class="heading" id="followontumblr">Follow on Tumblr</div></a>
+                <a href="http://www.tumblr.com/follow/{Name}"><div class="heading" id="followontumblr">{lang:Follow on Tumblr}</div></a>
                 
                 {block:Twitter}
-                <div id="twitterwrapper" style="display: none">
-                    <a href="http://twitter.com/{TwitterUsername}" style="text-decoration: none"><div class="heading" id="twitter">Latest Tweets</div></a>
+                <div id="twitterwrapper" style="display:none;">
+                    <a href="http://twitter.com/{TwitterUsername}" style="text-decoration:none;"><div class="heading" id="twitter">{lang:Latest Tweets}</div></a>
                     <div id="tweetcontainer"></div>
                     <script type="text/javascript">
                         function recent_tweets(data) {
@@ -949,7 +1074,7 @@
                 
                 {block:IfShowPeopleIFollow}
                     {block:Following}
-                        <div class="heading" id="following">Following</div>
+                        <div class="heading" id="following">{lang:Following}</div>
                         <div class="content" id="following-avatars">
                             {block:Followed}<a href="{FollowedURL}"><img src="{FollowedPortraitURL-40}" /></a>{/block:Followed}
                         </div>
@@ -958,13 +1083,13 @@
                 
                 <div id="buttons">
                     <div class="row">
-                        <div class="button" id="button-rss"><a href="{RSS}">RSS Feed</a></div>
-                        <div class="button" id="button-random"><a href="/random">Random</a></div>
+                        <div class="button" id="button-rss"><a href="{RSS}">{lang:RSS feed}</a></div>
+                        <div class="button" id="button-random"><a href="/random">{lang:Random}</a></div>
                     </div>
                     <div class="clear"></div>
                     <div class="row">
-                        <div class="button" id="button-archive"><a href="/archive">Archive</a></div>
-                        <div class="button" id="button-mobile"><a href="/mobile">Mobile</a></div>
+                        <div class="button" id="button-archive"><a href="/archive">{lang:Archive}</a></div>
+                        <div class="button" id="button-mobile"><a href="/mobile">{lang:Mobile}</a></div>
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -972,7 +1097,7 @@
             </div>
             
             <div id="bottom"></div>
-            <div id="copyright">&copy; {CopyrightYears} <a href="http://www.tumblr.com">Powered by Tumblr</a></div>
+            <div id="copyright">&copy; {CopyrightYears} <a href="http://www.tumblr.com">{lang:Powered by Tumblr}</a></div>
         </div>
         
         <div class="clear"></div>
