@@ -60,7 +60,14 @@ $(document).ready(function(){
         var k = key.toLowerCase();
         switch (k) {
         case 'boolean':
-          p.prepend('<input type="checkbox" name="if:'+name+'" '+(content ? 'checked' : '')+' />');
+          var is_content_true = false;
+          if (content.length) {
+            is_content_true = true;
+            if (parseInt(content) >= 0) {
+              is_content_true = (parseInt(content) > 0);
+            }
+          }
+          p.prepend('<input type="checkbox" name="if:'+name+'" '+(is_content_true ? 'checked' : '')+' />');
           break;
         case 'font':
           p.append(fontSelector(content).attr('name',k+':'+name));
