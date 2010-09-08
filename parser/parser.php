@@ -340,6 +340,9 @@ class ThimbleParser {
         case 'Video':
           $markup = $this->render_video_post($post, $post_block);
           break;	
+        case 'Answer':
+          $markup = $this->render_answer_post($post, $post_block);
+          break;
         }
       }
     }
@@ -657,6 +660,22 @@ class ThimbleParser {
 			$html = $this->render_block('Caption', $html);
 		} else {
 			$html = $this->strip_block('Caption',$html);
+		}
+		return $html;
+	}
+	
+	protected function render_answer_post($post, $block) {
+		$html = $block;
+		$html = $this->render_post_variable('Question', $post, $html);
+		$html = $this->render_post_variable('Answer', $post, $html);
+		$html = $this->render_post_variable('Asker', $post, $html);
+		$asker_portraits = array(
+			'AskerPortraitURL-16', 'AskerPortraitURL-24', 'AskerPortraitURL-30', 
+			'AskerPortraitURL-40', 'AskerPortraitURL-48', 'AskerPortraitURL-64',
+			'AskerPortraitURL-96', 'AskerPortraitURL-128'
+		);
+		foreach($asker_portraits as $portrait) {
+			$html = $this->render_post_variable($portrait, $post, $html);
 		}
 		return $html;
 	}
