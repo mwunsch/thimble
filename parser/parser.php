@@ -24,12 +24,15 @@ class ThimbleParser {
 		'PortraitURL-128' 	=> "http://assets.tumblr.com/images/default_avatar_128.gif",
 		'CopyrightYears'	=> '2007-2010',	
 	);
+
+  public $localization = array();
 	
 	public $template = array();	
 		
-	public function __construct($data = array(), $type = 'index') {
+	public function __construct($data = array(), $lang = array(), $type = 'index') {
 		$this->type = $type;
 		$this->template = array_merge($this->defaults, Spyc::YAMLLoad($data));
+    $this->localization = Spyc::YAMLLoad($lang);
 	}
 	
 	public function block_pattern($block_name) {
@@ -70,6 +73,9 @@ class ThimbleParser {
 		if ($this->type == 'index') {
 			$doc = $this->build_index($doc);
 		}
+
+    // Localize
+    $doc = $this->localize($doc);
 		
 		// render Global Blocks		
 		if ($this->template['Description']) {
@@ -217,6 +223,15 @@ class ThimbleParser {
 		return $doc;
 	}
 	
+  public function localize($doc) {
+    if (count($this->localization)) {
+      foreach ($this->localization as $key => $value) {
+        $doc = $this->render_variable("lang:$key", $value, $doc);
+      }
+    }
+    return $doc;
+  }
+
 	public function get_pages($pages, $document) {
 		$html = $document;
 		$has_page_block = preg_match_all($this->block_pattern('Pages'), $html, $matcher);
