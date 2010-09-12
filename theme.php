@@ -3,6 +3,7 @@
 require_once 'parser/parser.php';
 
 $DATA = 'demo.yml';
+$LOCALE = 'en-us.yml';
 $THEME = 'themes/'.$_GET['theme'];
 $options = $_REQUEST;
 
@@ -20,7 +21,7 @@ if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time ||
    exit; 
 }
 
-$theme = new ThimbleParser(file_get_contents('data/'.$DATA));
+$theme = new ThimbleParser(file_get_contents('data/'.$DATA), file_get_contents('lang/'.$LOCALE));
 echo $theme->parse(file_get_contents($THEME), $options);
 
 ?>
