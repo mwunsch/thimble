@@ -702,6 +702,8 @@ class ThimbleParser {
 		foreach($asker_portraits as $portrait) {
 			$html = $this->render_post_variable($portrait, $post, $html);
 		}
+    $html = $this->render_locale_string('Asked by Asker', $html, $post['Asker']);
+    $html = $this->render_locale_string('Asker asked', $html, $post['Asker']);
 		return $html;
 	}
 	
