@@ -235,8 +235,8 @@ class ThimbleParser {
 	
   public function localize($doc) {
     if (count($this->localization)) {
-      foreach ($this->localization as $key => $value) {
-        $doc = $this->render_variable("lang:$key", $value, $doc);
+      foreach (array_keys($this->localization) as $key) {
+        $doc = $this->render_locale_string($key, $doc);
       }
     }
     return $doc;
