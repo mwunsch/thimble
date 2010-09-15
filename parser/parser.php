@@ -62,7 +62,17 @@ class ThimbleParser {
 	public function render_post_variable($name, $post, $block) {
 		return $this->render_variable($name, $post[$name], $block);
 	}
-	
+
+  public function render_locale_string($key, $doc) {
+    if (func_num_args() > 2) {
+      $string = vsprintf($this->localization[$key], array_slice(func_get_args(), 2));
+    } else {
+      $string = $this->localization[$key];
+    }
+    $doc = $this->render_variable("lang:$key", $string, $doc);
+    return $doc;
+  }
+
 	public function parse($document, $appearance_options = array()) {
 		$doc = $document;
 		
