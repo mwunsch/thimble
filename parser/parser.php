@@ -396,7 +396,9 @@ class ThimbleParser {
 		
 		if ($post['Reblog']) {
 			$block = $this->render_reblog_info($post, $block);
-		}
+    } else {
+      $block = $this->render_block('NotReblog', $block);
+    }
 		
 		$block = $this->render_block('More', $block);
 		return $block;
@@ -453,6 +455,10 @@ class ThimbleParser {
 		$html = preg_replace('/{24Hour}|{24HourWithZero}/i', strftime('%H',$time), $html);
 		$html = $this->render_variable('Minutes', strftime('%M',$time), $html);
 		$html = $this->render_variable('Seconds', strftime('%S',$time), $html);
+
+    if ($post['Reblog']) {
+      $html = $this->render_locale_string('Reblogged TimeAgo from ReblogParentName',$html, $day_difference." days ago", $post['Reblog']['ReblogParentName']);
+    }
 
 		$html = $this->render_block('Date', $html);
 		return $html;
