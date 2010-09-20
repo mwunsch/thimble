@@ -2,6 +2,7 @@
 
 require_once 'parser/parser.php';
 
+$VERSION = '0.3.0';
 $DATA = 'demo.yml';
 $LOCALE = 'en-us.yml';
 $THEME = 'themes/'.$_GET['theme'];
