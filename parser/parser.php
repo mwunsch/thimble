@@ -65,7 +65,8 @@ class ThimbleParser {
 
   public function render_locale_string($key, $doc) {
     if (func_num_args() > 2) {
-      $string = vsprintf($this->localization[$key], array_slice(func_get_args(), 2));
+      $arguments = func_get_args();
+      $string = vsprintf($this->localization[$key], array_slice($arguments, 2));
     } else {
       $string = $this->localization[$key];
     }
