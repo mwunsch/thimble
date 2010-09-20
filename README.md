@@ -27,10 +27,10 @@ It reads data out of a [YAML](http://yaml.org/) file. If you'd like to render yo
 ### Caveats
 
 + Thimble provides the basic index page, similar to the one found in the Tumblr customize tool. Other page types (permalinks, search pages) are currently not supported, but might be in the future.
-+ Thimble does not yet support Answer posts. This is planned for a future release.
++ <strike>Thimble does not yet support Answer posts.</strike> Answer posts have arrived in Version 0.3! Thanks to [drtangible](http://github.com/drtangible) for a great contribution!
 + Thimble does not yet support listing Liked posts. Planned for a future release.
 + Thimble does not yet support Group blog stuff. Future release.
-+ Thimble doesn't allow you to manipulate meta options in the UI, you have to do it in the theme file. Future. 
++ <strike>Thimble doesn't allow you to manipulate meta options in the UI.</strike> You can manipulate Apperance Options (the stuff in Meta tags) as of Version 0.3.
 + Thimble does not support Photosets.
 + It could be missing other stuff... I don't know.
 
