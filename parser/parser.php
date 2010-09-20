@@ -307,8 +307,57 @@ class ThimbleParser {
 		} else {
 			$html = $this->strip_block('Pagination', $html);
 		}
+
+    // Jump Pagination. It's hard
+    $html = preg_replace_callback(
+      '/{block:(JumpPagination length="(\d+)")}(.*?){\/block:JumpPagination}/is',
+      array($this,'render_jump_pagination'),
+      $html
+    );
+
 		return $html;
 	}
+
+  public function render_jump_pagination($matches) {
+    $length = $matches[2];
+    $block = $matches[3];
+    $index = 1;
+    $current_page = 1;
+    $html = '';
+
+    while ($index <= $length) {
+      if ($index == $current_page) {
+        $html .= preg_replace_callback(
+          $this->block_pattern('CurrentPage'),
+          create_function(
+            '$matches',
+            '$pagination_block = $matches[2];
+             $pagination_block = preg_replace("/{PageNumber}/i",'.($index).',$pagination_block);
+             $pagination_block = preg_replace("/{URL}/i","/'.($index).'",$pagination_block);
+             return $pagination_block;'
+          ),
+          $block
+        );
+      } else {
+        $html .= preg_replace_callback(
+          $this->block_pattern('JumpPage'),
+          create_function(
+            '$matches',
+            '$pagination_block = $matches[2];
+             $pagination_block = preg_replace("/{PageNumber}/i",'.($index).',$pagination_block);
+             $pagination_block = preg_replace("/{URL}/i","/'.($index).'",$pagination_block);
+             return $pagination_block;'
+          ),
+          $block
+        );
+      }
+      $index++;
+    }
+
+    $html = $this->cleanup($html);
+
+    return $html;
+  }
 	
 	public function get_posts($document) {
 		$html = preg_replace_callback(
