@@ -399,6 +399,10 @@ class ThimbleParser {
     } else {
       $block = $this->render_block('NotReblog', $block);
     }
+
+    if ($post['ContentSource']) {
+      $block = $this->render_content_source($post, $block);
+    }
 		
 		$block = $this->render_block('More', $block);
 		return $block;
@@ -521,6 +525,27 @@ class ThimbleParser {
 		
 		return $html;
 	}
+
+  protected function render_content_source($post, $block) {
+    $source = $post['ContentSource'];
+    $logo = $source['SourceLogo'];
+
+    $block = $this->render_post_variable('SourceURL', $source, $block);
+    $block = $this->render_post_variable('SourceTitle', $source, $block);
+
+    if ($logo) {
+      $block = $this->render_post_variable('BlackLogoURL', $logo, $block);
+      $block = $this->render_post_variable('LogoWidth', $logo, $block);
+      $block = $this->render_post_variable('LogoHeight', $logo, $block);
+      $block = $this->render_block('SourceLogo', $block);
+    } else {
+      $block = $this->render_block('NoSourceLogo', $block);
+    }
+
+    $block = $this->render_block('ContentSource', $block);
+
+    return $block;
+  }
 	
 	protected function render_text_post($post, $block) {
 		$html = '';

@@ -85,6 +85,13 @@ Posts:
       - wisdom
     Quote: It does not matter how slow you go so long as you do not stop.
     Source: Wisdom of <a href="http://en.wikipedia.org/wiki/Confucius">Confucius</a>
+    ContentSource:
+      SourceURL: "http://en.wikipedia.org/wiki/Journalism_sourcing"
+      SourceTitle: "Wikipedia"
+      SourceLogo:
+        BlackLogoURL: "http://assets.tumblr.com/images/source_logos/wikipedia_000.png"
+        LogoWidth: 75
+        LogoHeight: 11
   - Type: Photo
     Permalink: http://demo.tumblr.com/post/459265350/passing-through-times-square-by-mareen-fischinger
     PostId: 459265350
