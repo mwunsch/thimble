@@ -2,6 +2,8 @@
 
 Tumblr Theme development tool. Protects your fingers from tedious copy-pasting.
 
+It is no longer actively maintained.
+
 ## What is this?
 
 Developing a Theme for Tumblr can be tedious: occupied by a large amount of copying and pasting a Tumblr template into their customize tool. **Thimble** gives you, the Tumblr Theme developer, a canvas to test your theme before moving it into Tumblr. Think of it as a place to work out your theme's rough draft. And you can work offline.
